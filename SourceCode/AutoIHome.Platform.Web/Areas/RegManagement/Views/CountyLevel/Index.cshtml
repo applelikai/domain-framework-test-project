@@ -1,0 +1,406 @@
+﻿@section styles{
+    <link rel="stylesheet" href="~/css/ext-components.css" />
+}
+@section scripts{
+    <!--添加引用-->
+    <script type="text/javascript" src="~/js/_references.js"></script>
+    <!--查询展示-->
+    <script type="text/javascript">
+        //获取展示分部视图的url
+        function get_url_for_show_view() { return '@Url.Action("ShowView")'; }
+        //获取显示县级行政区列表的url
+        function get_url_for_show_county_levels() { return '@Url.Action("ShowListPagedCountyLevels")'; }
+        //获取显示县级行政区详情的url
+        function get_url_for_show_county_level() { return '@Url.Action("ShowDetailCountyLevel")'; }
+        //获取显示编辑县级行政区的url
+        function get_url_for_edit_county_level() { return '@Url.Action("ShowEditCountyLevel")'; }
+        //获取导出县级行政区列表excel的url
+        function get_url_for_export_county_levels() { return '@Url.Action("ExportCountyLevelsToExcel")'; }
+
+        //分页查询县级行政区列表
+        function search_county_levels(pageIndex, pageSize) {
+            //创建Table分页加载对象
+            let oPagedListLoader = new PagedListLoader('#main > div[data-name="main"] div[data-name="county-levels"]');
+            //指定查询url
+            oPagedListLoader.url = get_url_for_show_county_levels();
+            //指定查询参数
+            oPagedListLoader.data = {
+                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                functionName: 'search_county_levels'
+            };
+            //加载数据
+            oPagedListLoader.load();
+        }
+        //显示县级行政区详情
+        function show_county_level(countyCode) {
+            //创建容器对象
+            let oContainer = new ModalContentContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_show_county_level();
+            //指定参数
+            oContainer.data = { countyCode: countyCode };
+            //显示当前容器
+            oContainer.show();
+        }
+        //初始化设置新建县级行政区表单
+        function set_new_county_level(form) {
+            //加载查询可选省级行政区列表
+            load_search_province_levels(form.querySelector('input[name="ProvinceName"]'));
+        }
+        //显示新建县级行政区
+        function show_new_county_level() {
+            //创建容器对象
+            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_show_view();
+            //指定参数
+            oContainer.data = {
+                viewName: '_NewCountyLevel',
+                title: '新建县级行政区'
+            };
+            //指定初始化表单的函数
+            oContainer.set_form = set_new_county_level;
+            //显示当前容器
+            oContainer.show();
+        }
+        //显示编辑县级行政区
+        function show_edit_county_level(countyCode) {
+            //创建容器对象
+            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_edit_county_level();
+            //指定参数
+            oContainer.data = { countyCode: countyCode };
+            //显示当前容器
+            oContainer.show();
+        }
+        //导出县级行政区列表
+        function export_county_levels() {
+            //获取跳转的url地址
+            let sUrl = get_url_for_export_county_levels()
+                + '?'
+                + $('#main > div[data-name="main"] form[role="search"]').serialize();
+            //跳转
+            window.location.href = sUrl;
+        }
+    </script>
+    <!--提交修改-->
+    <script type="text/javascript">
+        //获取添加县级行政区的url
+        function get_url_for_add_county_level() { return '@Url.Action("AddEntity")'; }
+        //获取保存县级行政区的url
+        function get_url_for_save_county_level() { return '@Url.Action("SaveEntity")'; }
+        //获取删除县级行政区的url
+        function get_url_for_remove_county_level() { return '@Url.Action("SaveEntity")'; }
+
+        //添加县级行政区
+        function add_county_level(form) {
+            //创建表单提交对象
+            let oSubmitter = new DataFormSubmitter(form);
+            //指定提交地址
+            oSubmitter.url = get_url_for_add_county_level();
+            //指定执行成功后的回掉函数
+            oSubmitter.call_back = function () {
+                //获取并指定当前行政区代码
+                let sCountyCode = form.querySelector('input[name="CountyCode"]').value;
+                document.querySelector('#main > div[data-name="main"] form[role="search"] input[name="CountyCode"]').value = sCountyCode;
+                //重新查询
+                search_county_levels(1);
+                //回到上一个界面
+                go_back($(form).parents('.modal-content'));
+            };
+            //执行提交
+            oSubmitter.submit();
+        }
+        //保存县级行政区
+        function save_county_level(form) {
+            //创建表单提交对象
+            let oSubmitter = new DataFormSubmitter(form);
+            //指定提交地址
+            oSubmitter.url = get_url_for_save_county_level();
+            //指定执行成功后的回掉函数
+            oSubmitter.call_back = function () {
+                //获取并指定当前行政区代码
+                let sCountyCode = form.querySelector('input[name="CountyCode"]').value;
+                document.querySelector('#main > div[data-name="main"] form[role="search"] input[name="CountyCode"]').value = sCountyCode;
+                //重新查询
+                search_county_levels(1);
+                //回到上一个界面
+                go_back($(form).parents('.modal-content'));
+            };
+            //执行提交
+            oSubmitter.submit();
+        }
+        //删除县级行政区
+        function remove_county_level(countyCode) {
+            //创建数据提交对象
+            let oSubmitter = new DataSubmitter('确定删除当前县级行政区吗?');
+            //指定提交地址
+            oSubmitter.url = get_url_for_remove_county_level();
+            //指定参数
+            oSubmitter.data = { countyCode: countyCode };
+            //指定提交完成后的回掉函数
+            oSubmitter.call_back = search_county_levels;
+            //提交
+            oSubmitter.submit();
+        }
+    </script>
+    <!--点击选择省级行政区-->
+    <script type="text/javascript">
+        //获取显示查询可选省级行政区列表的url
+        function get_url_for_show_search_province_levels() { return '@Url.Action("ShowListSearchProvinceLevels", "ProvinceLevel")'; }
+        //获取显示可选省级行政区列表的url
+        function get_url_for_show_select_province_levels() { return '@Url.Action("ShowListSelectProvinceLevels", "ProvinceLevel")'; }
+
+        //加载查询可选省级行政区列表
+        function load_search_province_levels(element) {
+            //获取数据
+            let jData = {
+                pageIndex: 1,
+                pageSize: 5,
+                functionName: 'search_select_province_levels',
+                selectFunctionName: 'select_province_level'
+            };
+            //加载查询可选省级行政区列表
+            $.post(get_url_for_show_search_province_levels(), jData, function (data, textStatus, jqXHR) {
+                //打印log
+                console.log(textStatus);
+                //初始化悬停框
+                new bootstrap.Popover(element, {
+                    container: document.body,
+                    content: function () {
+                        let divContainer = document.createElement('div');
+                        divContainer.innerHTML = data;
+                        divContainer.id = 'div-select-province-levels';
+                        return divContainer;
+                    },
+                    html: true,
+                    placement: 'left'
+                });
+            }, 'html');
+        }
+        //分页查询可选省级行政区列表
+        function search_select_province_levels(pageIndex, pageSize) {
+            //创建Table分页加载对象
+            let oTableLoader = new PageTableLoader('#div-select-province-levels > main', 4);
+            //指定查询url
+            oTableLoader.url = get_url_for_show_select_province_levels();
+            //指定查询参数
+            oTableLoader.data = {
+                searcher: $('#div-select-province-levels > form').serializeObject(),
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                functionName: 'search_select_province_levels',
+                selectFunctionName: 'select_province_level'
+            };
+            //加载数据
+            oTableLoader.load();
+        }
+        //选择当前省级行政区
+        function select_province_level(sProvinceCode, sProvinceName, sProvinceType) {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //指定省级行政区信息
+            form.querySelector('input[name="ProvinceCode"]').value = sProvinceCode;
+            form.querySelector('input[name="ProvinceName"]').value = sProvinceName;
+            //清空地级行政区信息
+            form.querySelector('input[name="PrefectureCode"]').value = '';
+            form.querySelector('input[name="PrefectureName"]').value = '';
+            //关闭当前悬停框
+            bootstrap.Popover.getInstance(form.querySelector('input[name="ProvinceName"]')).hide();
+            //若当前行政区类型不是直辖市
+            if (sProvinceType != '直辖市') {
+                //销毁查询可选地级行政区列表的悬停框
+                let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="PrefectureName"]'));
+                if (oPopover != undefined)
+                    oPopover.dispose();
+                //加载查询可选地级行政区列表
+                load_search_prefecture_levels(form);
+            }
+        }
+        //关闭并取消选择当前省级行政区
+        function close_search_select_province_levels() {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //清空省级行政区信息
+            form.querySelector('input[name="ProvinceCode"]').value = '';
+            form.querySelector('input[name="ProvinceName"]').value = '';
+            //清空地级行政区信息
+            form.querySelector('input[name="PrefectureCode"]').value = '';
+            form.querySelector('input[name="PrefectureName"]').value = '';
+            //关闭当前悬停框
+            bootstrap.Popover.getInstance(form.querySelector('input[name="ProvinceName"]')).hide();
+            //销毁查询可选地级行政区列表的悬停框
+            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="PrefectureName"]'));
+            if (oPopover != undefined)
+                oPopover.dispose();
+        }
+    </script>
+    <!--点击选择地级行政区-->
+    <script type="text/javascript">
+        //获取显示查询可选地级行政区列表的url
+        function get_url_for_show_search_prefecture_levels() { return '@Url.Action("ShowListSearchPrefectureLevels", "PrefectureLevel")'; }
+        //获取显示可选地级行政区列表的url
+        function get_url_for_show_select_prefecture_levels() { return '@Url.Action("ShowListSelectPrefectureLevels", "PrefectureLevel")'; }
+
+        //加载查询可选地级行政区列表
+        function load_search_prefecture_levels(form) {
+            //获取数据
+            let jData = {
+                searcher: {
+                    ProvinceName: form.querySelector('input[name="ProvinceName"]').value
+                },
+                pageIndex: 1,
+                pageSize: 5,
+                functionName: 'search_select_prefecture_levels',
+                selectFunctionName: 'select_prefecture_level'
+            };
+            //加载查询可选地级行政区列表
+            $.post(get_url_for_show_search_prefecture_levels(), jData, function (data, textStatus, jqXHR) {
+                //打印log
+                console.log(textStatus);
+                //初始化悬停框
+                new bootstrap.Popover(form.querySelector('input[name="PrefectureName"]'), {
+                    container: document.body,
+                    content: function () {
+                        let divContainer = document.createElement('div');
+                        divContainer.innerHTML = data;
+                        divContainer.id = 'div-select-prefecture-levels';
+                        return divContainer;
+                    },
+                    html: true,
+                    placement: 'left'
+                });
+            }, 'html');
+        }
+        //分页查询可选地级行政区列表
+        function search_select_prefecture_levels(pageIndex, pageSize) {
+            //创建Table分页加载对象
+            let oTableLoader = new PageTableLoader('#div-select-prefecture-levels > main', 4);
+            //指定查询url
+            oTableLoader.url = get_url_for_show_select_prefecture_levels();
+            //指定查询参数
+            oTableLoader.data = {
+                searcher: $('#div-select-prefecture-levels > form').serializeObject(),
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                functionName: 'search_select_prefecture_levels',
+                selectFunctionName: 'select_prefecture_level'
+            };
+            //加载数据
+            oTableLoader.load();
+        }
+        //选择当前地级行政区
+        function select_prefecture_level(sPrefectureCode, sPrefectureName) {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //指定地级行政区信息
+            form.querySelector('input[name="PrefectureCode"]').value = sPrefectureCode;
+            form.querySelector('input[name="PrefectureName"]').value = sPrefectureName;
+            //关闭当前悬停框
+            bootstrap.Popover.getInstance(form.querySelector('input[name="PrefectureName"]')).hide();
+        }
+        //关闭并取消选择当前地级行政区
+        function close_search_select_prefecture_levels() {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //清空地级行政区信息
+            form.querySelector('input[name="PrefectureCode"]').value = '';
+            form.querySelector('input[name="PrefectureName"]').value = '';
+            //关闭当前悬停框
+            bootstrap.Popover.getInstance(form.querySelector('input[name="PrefectureName"]')).hide();
+        }
+    </script>
+    <!--初始化-->
+    <script type="text/javascript">
+        $(function () {
+            //默认查询第一页的县级行政区列表
+            search_county_levels(1);
+        })
+    </script>
+}
+@section navigation{
+    <li class="breadcrumb-item">
+        <a asp-area="" asp-controller="Home" asp-action="Index">主页</a>
+    </li>
+    <li class="breadcrumb-item">区域管理</li>
+    <li class="breadcrumb-item active" aria-current="page">@base.ViewData["Title"]</li>
+}
+
+<!--查询表单-->
+<form class="bg-white pt-3 pb-3" role="search">
+    <div class="row">
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">省级行政区:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="ProvinceName" />
+            </div>
+        </div>
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">地级行政区:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PrefectureName" />
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">行政区代码:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="CountyCode" />
+            </div>
+        </div>
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">行政区名称:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="CountyName" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <primary-button click="search_county_levels(1);">
+                <partial name="_ButtonTextSearch" />
+            </primary-button>
+            &nbsp;
+            <primary-button click="export_county_levels();">
+                <partial name="_ButtonTextExport" />
+            </primary-button>
+            &nbsp;
+            <primary-button click="show_new_county_level();">
+                <partial name="_ButtonTextNew" />
+            </primary-button>
+        </div>
+    </div>
+</form>
+<!--数据展示-->
+<div class="paged-list bg-white mt-2 h-75" data-name="county-levels">
+    <div>
+        <!--表头-->
+        <header style="width:1420px;">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="w-fixed-150">行政区代码</th>
+                        <th class="w-fixed-150">省级行政区</th>
+                        <th class="w-fixed-150">地级行政区</th>
+                        <th class="w-fixed-150">行政区名称</th>
+                        <th class="w-fixed-150">行政区类型</th>
+                        <th class="w-fixed-100">邮政编码</th>
+                        <th class="w-fixed-200">备注</th>
+                        <th class="w-fixed-200">录入时间</th>
+                        <th class="w-fixed-150">操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </header>
+        <!--主体:数据行列表-->
+        <main style="width:1420px;"></main>
+    </div>
+    <!--页尾:分页-->
+    <footer>
+        <!--初始化隐藏变量-->
+        <input type="hidden" name="PageSize" value="20" />
+        <input type="hidden" name="PageIndex" value="1" />
+    </footer>
+</div>

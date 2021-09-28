@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "_ModalContentForm";
+}
+
+<!--新建部门表单-->
+<form action="javascript:void(0);" onsubmit="add_department(this);">
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">部门编号</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="DepartmentNo" required />
+                <invalid-message>请输入部门编号</invalid-message>
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">上级部门编号</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="ParentDepartmentNo" />
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">部门名称</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="DepartmentName" required />
+                <invalid-message>请输入部门名称</invalid-message>
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">部门领导</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="DepartmentManager" required />
+                <invalid-message>请输入部门领导</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 pe-md-4">
+        <div class="col-md-12 row">
+            <label class="col-md-2 col-form-label text-end">备注</label>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Remark" />
+            </div>
+        </div>
+    </div>
+</form>

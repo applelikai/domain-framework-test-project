@@ -1,0 +1,88 @@
+﻿@model CountyLevel
+@{
+    Layout = "_ModalContentForm";
+}
+
+<!--编辑县级行政区表单-->
+<form action="javascript:void(0);" onsubmit="save_county_level(this);">
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">行政区代码</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="CountyCode" value="@base.Model.CountyCode" readonly />
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">行政区名称</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="CountyName" value="@base.Model.CountyName" required />
+                <invalid-message>请输入行政区名称</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">邮政编码</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PostalCode" value="@base.Model.PostalCode" required />
+                <invalid-message>请输入邮政编码</invalid-message>
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">行政区类型</label>
+            <div class="col-md-8">
+                <select class="form-select" name="CountyType" required>
+                    <option value="">=请选择行政区类型=</option>
+                    @foreach (string countyType in CountyLevel.CountyTypes)
+                    {
+                        if (base.Model.CountyType.Equals(countyType))
+                        {
+                            <option value="@countyType" selected>@countyType</option>
+                        }
+                        else
+                        {
+                            <option value="@countyType">@countyType</option>
+                        }
+                    }
+                </select>
+                <invalid-message>请选择行政区类型</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">省级代码</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="ProvinceCode" value="@base.Model.ProvinceCode" readonly />
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">省级行政区</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="ProvinceName" value="@base.Model.ProvinceLevel.ProvinceName" readonly />
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">地级代码</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PrefectureCode" value="@base.Model.PrefectureCode" readonly />
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">地级行政区</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PrefectureName" value="@base.Model.PrefectureLevel.PrefectureName" readonly />
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 pe-md-4">
+        <div class="col-md-12 row">
+            <label class="col-md-2 col-form-label text-end">备注</label>
+            <div class="col-md-10">
+                <textarea class="form-control" name="Remark">@base.Model.Remark</textarea>
+            </div>
+        </div>
+    </div>
+</form>

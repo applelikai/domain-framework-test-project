@@ -1,0 +1,84 @@
+﻿@{
+    Layout = "_ModalContentForm";
+}
+
+<!--新建地级行政区表单-->
+<form action="javascript:void(0);" onsubmit="add_prefecture_level(this);">
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">行政区代码</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PrefectureCode" required />
+                <invalid-message>请输入行政区代码</invalid-message>
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">行政区名称</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PrefectureName" required />
+                <invalid-message>请输入行政区名称</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">英文名称</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PrefectureEnName" required />
+                <invalid-message>请输入英文名称</invalid-message>
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">行政区类型</label>
+            <div class="col-md-8">
+                <select class="form-select" name="PrefectureType" required>
+                    <option value="">=请选择行政区类型=</option>
+                    @foreach (string prefectureType in PrefectureLevel.PrefectureTypes)
+                    {
+                        <option value="@prefectureType">@prefectureType</option>
+                    }
+                </select>
+                <invalid-message>请选择行政区类型</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">省级代码</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="ProvinceCode" readonly />
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">省级行政区</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" data-bs-toggle="popover" name="ProvinceName" required />
+                <invalid-message>请选择省级行政区</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">电话区号</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="AreaCode" required />
+                <invalid-message>请输入电话区号</invalid-message>
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">车牌代码</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="LicensePlateCode" required />
+                <invalid-message>请输入车牌代码</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3 pe-md-4">
+        <div class="col-md-12 row">
+            <label class="col-md-2 col-form-label text-end">备注</label>
+            <div class="col-md-10">
+                <textarea class="form-control" name="Remark"></textarea>
+            </div>
+        </div>
+    </div>
+</form>

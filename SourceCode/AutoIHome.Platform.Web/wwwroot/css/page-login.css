@@ -1,0 +1,21 @@
+body {
+    background: #f8f6e9 url(../img/login_bg_0.jpg);
+    background-size: cover;
+}
+body > form {
+    font-family: 'Microsoft YaHei';
+    margin-top: 7%;
+    margin-left: auto;
+    margin-right: auto;
+    height: 350px;
+    width: 460px;
+    padding: 5%;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+body > form > div {
+    width: 380px;
+}
+body > form > div > .row {
+    margin-top: 2%;
+}

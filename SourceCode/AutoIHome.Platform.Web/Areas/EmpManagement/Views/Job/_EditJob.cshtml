@@ -1,0 +1,23 @@
+﻿@model Job
+@{
+    Layout = "_ModalDialogForm";
+}
+
+<!--编辑职位表单-->
+<form action="javascript:void(0);" onsubmit="save_job(this);">
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">职位名称</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="JobName" value="@base.Model.JobName" required />
+            <invalid-message>请输入职位名称</invalid-message>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">备注</label>
+        <div class="col-md-9">
+            <textarea class="form-control" name="Remark">@base.Model.Remark</textarea>
+        </div>
+    </div>
+    <!--隐藏变量-->
+    <input type="hidden" name="JobId" value="@base.Model.JobId" />
+</form>

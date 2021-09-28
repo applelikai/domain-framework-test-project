@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Apple_Li</Authors>
+    <PackageProjectUrl>https://github.com/applelikai/domain-framework-test-project</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/applelikai/domain-framework-test-project</RepositoryUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>领域框架核心库
+将Repository和Service对象存储在容器中
+按程序集进行分库，每个程序集下的Entity对应的所有表都在当前程序集对应的数据库中
+及每个程序集对应一个连接字符串，对应一个数据库，作为单独的领域</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Domain.Framework.Implementation\Domain.Framework.Implementation.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,104 @@
+﻿@model Employee
+@{
+    Layout = "_ModalContent";
+}
+<!--员工详情-->
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">员工编号</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="EmployeeNo" value="@base.Model.EmployeeNo" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">员工姓名</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="EmployeeName" value="@base.Model.EmployeeName" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">性别</label>
+        <div class="col-md-8 row justify-content-center">
+            <div class="col-md-4 form-check">
+                <input class="form-check-input" type="radio" name="Sex" id="rdo-male" value="男" @("男".Equals(base.Model.Sex) ? "checked" : string.Empty) disabled />
+                <label class="form-check-label" for="rdo-male">男</label>
+            </div>
+            <div class="col-md-4 form-check">
+                <input class="form-check-input" type="radio" name="Sex" id="rdo-female" value="女" @("女".Equals(base.Model.Sex) ? "checked" : string.Empty) disabled />
+                <label class="form-check-label" for="rdo-female">女</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">身份证号码</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="IdNumber" value="@base.Model.IdNumber" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">出生日期</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="Birthday" value="@string.Format("{0:yyyy-MM-dd}", base.Model.Birthday)" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">年龄</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="Age" value="@base.Model.Age" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">部门</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="DepartmentName" value="@base.Model.Department.DepartmentName" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">职位</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="JobName" value="@base.Model.Job.JobName" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">手机号码</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="PhoneNumber" value="@base.Model.PhoneNumber" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">电子邮箱</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="Email" value="@base.Model.Email" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3 pe-md-4">
+    <div class="col-md-12 row">
+        <label class="col-md-2 col-form-label text-end">家庭住址</label>
+        <div class="col-md-10">
+            <input class="form-control" type="text" name="Address" value="@base.Model.Address" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">入职日期</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="JoinDate" value="@string.Format("{0:yyyy-MM-dd}", base.Model.JoinDate)" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">离职日期</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="LeaveDate" value="@string.Format("{0:yyyy-MM-dd}", base.Model.LeaveDate)" readonly />
+        </div>
+    </div>
+</div>

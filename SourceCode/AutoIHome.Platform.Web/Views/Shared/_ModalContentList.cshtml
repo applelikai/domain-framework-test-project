@@ -1,0 +1,17 @@
+﻿<!--modal-content里面的内容模板-->
+<partial name="_ModalContentHeader" />
+<div class="modal-body">
+    <!--显示toolbar-->
+    <nav class="navbar float-end pe-0">
+        @base.RenderSection("toolbar", true)
+    </nav>
+    <!--数据展示-->
+    <div data-name="list">
+        @base.RenderBody()
+    </div>
+</div>
+<div class="modal-footer">
+    <secondary-button click="go_back($(this).parents('.modal-content'));">
+        <i class="fa fa-reply"></i>&nbsp;返&nbsp;回
+    </secondary-button>
+</div>

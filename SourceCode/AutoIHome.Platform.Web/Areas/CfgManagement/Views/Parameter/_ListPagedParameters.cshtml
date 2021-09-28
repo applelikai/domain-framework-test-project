@@ -1,0 +1,45 @@
+﻿@model IPagedList<Parameter>
+@{
+    string functionName = base.ViewBag.Function;
+    string linksViewName = base.ViewBag.LinksViewName;
+}
+
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>参数分类</th>
+            <th>参数名称</th>
+            <th>备注</th>
+            <th>排序时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var parameter in base.Model)
+        {
+            <tr>
+                <td>@parameter.Category.CategoryName</td>
+                <td>@parameter.ParameterName</td>
+                <td>@parameter.Remark</td>
+                <td>@string.Format("{0:yyyy-MM-dd HH:mm:ss}", parameter.SortedTime)</td>
+                <td>
+                    <primary-link click="show_parameter('@parameter.ParameterName');">
+                        <partial name="_LinkTextInfo" />
+                    </primary-link>
+                    <!--加载其他操作-->
+                    @if (!string.IsNullOrEmpty(linksViewName))
+                    {
+                        await Html.RenderPartialAsync(linksViewName, parameter);
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">
+                @await Html.PartialAsync("_Pagination", base.Model.GetPagination(functionName))
+            </td>
+        </tr>
+    </tfoot>
+</table>

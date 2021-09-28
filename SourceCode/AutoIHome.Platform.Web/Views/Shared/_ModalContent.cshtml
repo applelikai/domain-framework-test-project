@@ -1,0 +1,10 @@
+﻿<!--modal-content里面的内容模板-->
+<partial name="_ModalContentHeader" />
+<div class="modal-body">
+    @base.RenderBody()
+</div>
+<div class="modal-footer">
+    <secondary-button click="go_back($(this).parents('.modal-content'));">
+        <i class="fa fa-reply"></i>&nbsp;返&nbsp;回
+    </secondary-button>
+</div>

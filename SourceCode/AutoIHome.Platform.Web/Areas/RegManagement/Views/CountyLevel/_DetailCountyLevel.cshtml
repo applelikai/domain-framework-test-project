@@ -1,0 +1,70 @@
+﻿@model CountyLevel
+@{
+    Layout = "_ModalContentForm";
+}
+
+<!--县级行政区详情-->
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">行政区代码</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="CountyCode" value="@base.Model.CountyCode" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">行政区名称</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="CountyName" value="@base.Model.CountyName" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">邮政编码</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="PostalCode" value="@base.Model.PostalCode" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">行政区类型</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="CountyType" value="@base.Model.CountyType" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">省级代码</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="ProvinceCode" value="@base.Model.ProvinceCode" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">省级行政区</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="ProvinceName" value="@base.Model.ProvinceLevel.ProvinceName" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3">
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">地级代码</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="PrefectureCode" value="@base.Model.PrefectureCode" readonly />
+        </div>
+    </div>
+    <div class="col-md-6 row">
+        <label class="col-md-4 col-form-label text-end">地级行政区</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" name="PrefectureName" value="@base.Model.PrefectureLevel.PrefectureName" readonly />
+        </div>
+    </div>
+</div>
+<div class="row mb-3 pe-md-4">
+    <div class="col-md-12 row">
+        <label class="col-md-2 col-form-label text-end">备注</label>
+        <div class="col-md-10">
+            <textarea class="form-control" name="Remark" readonly>@base.Model.Remark</textarea>
+        </div>
+    </div>
+</div>

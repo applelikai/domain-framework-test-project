@@ -1,0 +1,14 @@
+﻿@model IPagedList<Parameter>
+@{
+    Layout = "_ModalContentList";
+}
+@section toolbar{
+    <primary-button click="show_new_parameter('@base.ViewData["CategoryId"]');">
+        <partial name="_ButtonTextNew" />
+    </primary-button>
+    <!--隐藏变量-->
+    <input type="hidden" name="CategoryId" value="@base.ViewData["CategoryId"]" />
+}
+
+<!--显示参数列表-->
+@await Html.PartialAsync("_ListPagedParameters", base.Model)

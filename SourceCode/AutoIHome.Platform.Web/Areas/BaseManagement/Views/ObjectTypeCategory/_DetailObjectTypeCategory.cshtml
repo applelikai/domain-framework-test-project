@@ -1,0 +1,65 @@
+﻿@model ObjectTypeCategory
+@{
+    Layout = "_ModalContent";
+}
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <tab-button name="object-type-category" class="active">基础信息</tab-button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <tab-button name="object-types" click="search_object_types(1);">基础类型列表</tab-button>
+    </li>
+</ul>
+<div class="tab-content pt-4">
+    <!--基础信息-->
+    <tab-pane name="object-type-category" class="show active">
+        <div class="row mb-3">
+            <label class="col-md-3 col-form-label text-end">分类代码</label>
+            <div class="col-md-9">
+                <input class="form-control" type="text" name="CategoryCode" value="@base.Model.CategoryCode" readonly />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-md-3 col-form-label text-end">分类名称</label>
+            <div class="col-md-9">
+                <input class="form-control" type="text" name="CategoryName" value="@base.Model.CategoryName" readonly />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-md-3 col-form-label text-end">备注</label>
+            <div class="col-md-9">
+                <textarea class="form-control" name="Remark" readonly>@base.Model.Remark</textarea>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label class="col-md-3 col-form-label text-end">排序时间</label>
+            <div class="col-md-9">
+                <input class="form-control" type="text" name="SortedTime" value="@string.Format("{0:yyyy-MM-dd HH:mm:ss}", base.Model.SortedTime)" readonly />
+            </div>
+        </div>
+    </tab-pane>
+    <!--基础类型列表-->
+    <tab-pane name="object-types">
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>分类名称</th>
+                    <th>类型名称</th>
+                    <th>备注</th>
+                    <th>排序时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5">
+                        <input type="hidden" name="PageSize" value="10" />
+                        <input type="hidden" name="PageIndex" value="1" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </tab-pane>
+</div>

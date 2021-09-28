@@ -1,0 +1,9 @@
+﻿@model Role
+
+<primary-link click="show_edit_role('@base.Model.RoleId');">
+    <partial name="_LinkTextEdit" />
+</primary-link>
+&nbsp;
+<danger-link click="remove_role('@base.Model.RoleId');">
+    <partial name="_LinkTextRemove" />
+</danger-link>

@@ -1,0 +1,8 @@
+﻿<!--modal-content里面的内容模板-->
+<partial name="_ModalContentHeader" />
+<div class="modal-body">
+    @base.RenderBody()
+</div>
+<div class="modal-footer">
+    @base.RenderSection("footer", true)
+</div>

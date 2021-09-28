@@ -1,0 +1,99 @@
+/*模板页样式*/
+html, body {
+    margin: 0px;
+    height: 100%;
+}
+body {
+    background-color: gainsboro;
+    padding-right: 0px !important;
+}
+/*页头*/
+body > header{
+    background-color: white;
+    color: #02b8d6;
+    height: 10%;
+}
+body > header .left{
+    background-color: #3E3E3E;
+    margin-left: -13px;
+    transform: skewX(-30deg);
+}
+body > header .left i{
+    margin-left: 30px;
+    transform: skewX(30deg);
+}
+body > header > nav > div > a{
+    font-size: 20px;
+}
+/*内容*/
+#div-content {
+    height: 90%;
+    margin-right: 0px;
+}
+#div-content > div > footer {
+    width: 100%;
+    margin-top: 5px;
+    padding: 0px;
+}
+/*左菜单*/
+#ul-sidebar {
+    background-color: #3E3E3E;
+    height: 100%;
+    min-height: 560px;
+}
+#ul-sidebar .nav-item{
+    display: block;
+    border-bottom: 1px solid rgba(107, 108, 109, 0.19);
+    position: relative;
+    text-align: -webkit-match-parent;
+}
+#ul-sidebar .nav-item .nav-link{
+    color: #fff;
+    text-align: left;
+}
+#ul-sidebar .nav-item .nav-link:hover{
+    background-color: #575757;
+    color: #02b8d6;
+}
+#ul-sidebar .nav-item .nav-link.active{
+    background-color: gainsboro;
+    color: #02b8d6;
+}
+#ul-sidebar .nav-item .nav-link .fa{
+    font-size: 20px;
+    padding: 12px 10px;
+}
+#ul-sidebar .nav-item .nav-link span{
+    margin-left: 5px;
+    font-size: 14px;
+}
+/*二级菜单样式*/
+#nav-child-menus {
+    margin-left: 10px;
+}
+#nav-child-menus .navbar-nav .nav-item .nav-link {
+    background-color: white;
+    font-family: 'Microsoft YaHei';
+    font-size: 14px;
+    margin-right: 10px;
+}
+#nav-child-menus .navbar-nav .nav-item .nav-link.active,
+#nav-child-menus .navbar-nav .nav-item .nav-link:hover{
+    background-color: #007bff;
+    color: white !important;
+    font-weight: bold;
+}
+/*主体内容样式*/
+#main {
+    width: 98%;
+    height: 87%;
+}
+#main > nav{
+    margin-bottom: 5px;
+}
+#main > div {
+    height: 95%;
+}
+#main > .modal-content > .modal-body{
+    overflow-y: auto;
+}

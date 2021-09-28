@@ -1,0 +1,40 @@
+/*通用样式*/
+a {
+    text-decoration: none;
+}
+/*错误样式*/
+.error{
+    color: red;
+}
+/*平行四边形*/
+.parallelogram{
+    transform: skewX(-30deg);
+}
+.parallelogram > .text{
+    display: block;
+    transform: skew(30deg);
+}
+/*固定宽度样式*/
+.w-fixed-100{
+    width: 100px;
+    text-overflow: ellipsis;
+}
+.w-fixed-150 {
+    width: 150px;
+    text-overflow: ellipsis;
+}
+.w-fixed-200 {
+    width: 200px;
+    text-overflow: ellipsis;
+}
+.w-fixed-250 {
+    width: 250px;
+    text-overflow: ellipsis;
+}
+/*滚动条样式*/
+.overflow-scroll-x{
+    overflow-x: scroll;
+}
+.overflow-scroll-y{
+    overflow-y: scroll;
+}

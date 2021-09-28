@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "_ModalDialogForm";
+}
+
+<!--新建基础类型分类表单-->
+<form action="javascript:void(0);" onsubmit="add_object_type_category(this);">
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">分类代码</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="CategoryCode" required />
+            <invalid-message>请输入分类代码</invalid-message>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">分类名称</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="CategoryName" required />
+            <invalid-message>请输入分类名称</invalid-message>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">备注</label>
+        <div class="col-md-9">
+            <textarea class="form-control" name="Remark"></textarea>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">排序时间</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="SortedTime" placeholder="插入时的操作时间" readonly />
+        </div>
+    </div>
+</form>

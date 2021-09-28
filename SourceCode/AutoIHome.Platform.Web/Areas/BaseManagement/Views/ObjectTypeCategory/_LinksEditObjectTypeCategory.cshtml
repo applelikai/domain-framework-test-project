@@ -1,0 +1,10 @@
+﻿@model ObjectTypeCategory
+
+&nbsp;
+<primary-link click="show_edit_object_type_category('@base.Model.CategoryCode');">
+    <partial name="_LinkTextEdit" />
+</primary-link>
+&nbsp;
+<danger-link click="remove_object_type_category('@base.Model.CategoryCode');">
+    <partial name="_LinkTextRemove" />
+</danger-link>

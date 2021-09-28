@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Apple_Li</Authors>
+    <PackageProjectUrl>https://github.com/applelikai/domain-framework-test-project</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/applelikai/domain-framework-test-project</RepositoryUrl>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Description>领域框架基础库：依赖注入容器</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

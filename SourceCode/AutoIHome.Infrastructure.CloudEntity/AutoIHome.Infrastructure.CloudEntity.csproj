@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CloudEntity" Version="1.2.5" />
+    <PackageReference Include="MySql.Data" Version="8.0.26" />
+    <PackageReference Include="Npgsql" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoIHome.Infrastructure\AutoIHome.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

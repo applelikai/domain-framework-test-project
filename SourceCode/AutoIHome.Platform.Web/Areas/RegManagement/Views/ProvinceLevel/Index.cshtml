@@ -1,0 +1,229 @@
+﻿@section styles{
+    <link rel="stylesheet" href="~/css/ext-components.css" />
+}
+@section scripts{
+    <!--添加引用-->
+    <script type="text/javascript" src="~/js/_references.js"></script>
+    <!--查询展示-->
+    <script type="text/javascript">
+        //获取展示分部视图的url
+        function get_url_for_show_view() { return '@Url.Action("ShowView")'; }
+        //获取显示省级行政区列表的url
+        function get_url_for_show_province_levels() { return '@Url.Action("ShowListPagedProvinceLevels")'; }
+        //获取显示省级行政区详情的url
+        function get_url_for_show_province_level() { return '@Url.Action("ShowDetailProvinceLevel")'; }
+        //获取显示编辑省级行政区的url
+        function get_url_for_edit_province_level() { return '@Url.Action("ShowEditProvinceLevel")'; }
+        //获取导出省级行政区列表excel的url
+        function get_url_for_export_province_levels() { return '@Url.Action("ExportProvinceLevelsToExcel")'; }
+
+        //分页查询省级行政区列表
+        function search_province_levels(pageIndex, pageSize) {
+            //创建分页列表加载对象
+            let oPagedListLoader = new PagedListLoader('#main > div[data-name="main"] div[data-name="province-levels"]');
+            //指定查询url
+            oPagedListLoader.url = get_url_for_show_province_levels();
+            //指定查询参数
+            oPagedListLoader.data = {
+                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                functionName: 'search_province_levels'
+            };
+            //加载数据
+            oPagedListLoader.load();
+        }
+        //显示省级行政区详情
+        function show_province_level(provinceCode) {
+            //创建容器对象
+            let oContainer = new ModalContentContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_show_province_level();
+            //指定参数
+            oContainer.data = { provinceCode: provinceCode };
+            //显示当前容器
+            oContainer.show();
+        }
+        //显示新建省级行政区
+        function show_new_province_level() {
+            //创建容器对象
+            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_show_view();
+            //指定参数
+            oContainer.data = {
+                viewName: '_NewProvinceLevel',
+                title: '新建省级行政区'
+            };
+            //显示当前容器
+            oContainer.show();
+        }
+        //显示编辑省级行政区
+        function show_edit_province_level(provinceCode) {
+            //创建容器对象
+            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_edit_province_level();
+            //指定参数
+            oContainer.data = { provinceCode: provinceCode };
+            //显示当前容器
+            oContainer.show();
+        }
+        //导出省级行政区列表至excel
+        function export_province_levels() {
+            //获取跳转的url地址
+            let sUrl = get_url_for_export_province_levels()
+                + '?'
+                + $('#main > div[data-name="main"] form[role="search"]').serialize();
+            //跳转
+            window.location.href = sUrl;
+        }
+    </script>
+    <!--提交修改-->
+    <script type="text/javascript">
+        //获取添加省级行政区的url
+        function get_url_for_add_province_level() { return '@Url.Action("AddEntity")'; }
+        //获取保存省级行政区的url
+        function get_url_for_save_province_level() { return '@Url.Action("SaveEntity")'; }
+        //获取删除省级行政区的url
+        function get_url_for_remove_province_level() { return '@Url.Action("RemoveProvinceLevel")'; }
+
+        //添加省级行政区
+        function add_province_level(form) {
+            //创建表单提交对象
+            let oSubmitter = new DataFormSubmitter(form);
+            //指定提交地址
+            oSubmitter.url = get_url_for_add_province_level();
+            //指定执行成功后的回掉函数
+            oSubmitter.call_back = function () {
+                //获取并指定当前行政区代码
+                let sProvinceCode = form.querySelector('input[name="ProvinceCode"]').value;
+                document.querySelector('#main > div[data-name="main"] form[role="search"] input[name="ProvinceCode"]').value = sProvinceCode;
+                //重新查询
+                search_province_levels(1);
+                //回到上一个界面
+                go_back($(form).parents('.modal-content'));
+            };
+            //执行提交
+            oSubmitter.submit();
+        }
+        //保存省级行政区
+        function save_province_level(form) {
+            //创建表单提交对象
+            let oSubmitter = new DataFormSubmitter(form);
+            //指定提交地址
+            oSubmitter.url = get_url_for_save_province_level();
+            //指定执行成功后的回掉函数
+            oSubmitter.call_back = function () {
+                //重新查询
+                search_province_levels();
+                //回到上一个界面
+                go_back($(form).parents('.modal-content'));
+            };
+            //执行提交
+            oSubmitter.submit();
+        }
+        //删除省级行政区
+        function remove_province_level(provinceCode) {
+            //创建数据提交对象
+            let oSubmitter = new DataSubmitter('确定删除当前省级行政区吗?');
+            //指定提交地址
+            oSubmitter.url = get_url_for_remove_province_level();
+            //指定参数
+            oSubmitter.data = { provinceCode: provinceCode };
+            //指定提交完成后的回掉函数
+            oSubmitter.call_back = search_province_levels;
+            //提交
+            oSubmitter.submit();
+        }
+    </script>
+    <!--初始化-->
+    <script type="text/javascript">
+        $(function () {
+            //默认查询第一页的省级行政区列表
+            search_province_levels(1);
+        })
+    </script>
+}
+@section navigation{
+    <li class="breadcrumb-item">
+        <a asp-area="" asp-controller="Home" asp-action="Index">主页</a>
+    </li>
+    <li class="breadcrumb-item">区域管理</li>
+    <li class="breadcrumb-item active" aria-current="page">@base.ViewData["Title"]</li>
+}
+
+
+<!--查询表单-->
+<form class="bg-white pt-3 pb-3" role="search">
+    <div class="row">
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">行政区代码:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="ProvinceCode" />
+            </div>
+        </div>
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">行政区名称:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="ProvinceName" />
+            </div>
+        </div>
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">行政区类型:</label>
+            <div class="col-md-8">
+                <select class="form-select" name="ProvinceType">
+                    <option value="">=所有行政区类型=</option>
+                    @foreach (string provinceType in ProvinceLevel.ProvinceTypes)
+                    {
+                        <option value="@provinceType">@provinceType</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-end mt-3">
+        <div class="col-md-4">
+            <primary-button click="search_province_levels(1);">
+                <partial name="_ButtonTextSearch" />
+            </primary-button>
+            &nbsp;
+            <primary-button click="export_province_levels();">
+                <partial name="_ButtonTextExport" />
+            </primary-button>
+            &nbsp;
+            <primary-button click="show_new_province_level();">
+                <partial name="_ButtonTextNew" />
+            </primary-button>
+        </div>
+    </div>
+</form>
+<!--数据展示-->
+<div class="paged-list bg-white mt-2 h-75" data-name="province-levels">
+    <div>
+        <!--表头-->
+        <header>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th class="w-fixed-150">行政区代码</th>
+                        <th class="w-fixed-150">行政区简称</th>
+                        <th class="w-fixed-150">行政区名称</th>
+                        <th class="w-fixed-150">行政区类型</th>
+                        <th class="w-fixed-200">备注</th>
+                        <th class="w-fixed-200">创建时间</th>
+                        <th class="w-fixed-150">操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </header>
+        <!--主体:数据行列表-->
+        <main></main>
+    </div>
+    <!--页尾:分页-->
+    <footer>
+        <!--初始化隐藏变量-->
+        <input type="hidden" name="PageSize" value="20" />
+        <input type="hidden" name="PageIndex" value="1" />
+    </footer>
+</div>

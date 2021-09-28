@@ -1,0 +1,58 @@
+﻿@model IPagedList<ProvinceLevel>
+@{ 
+    string functionName = base.ViewBag.Function;
+}
+
+<div>
+    <!--表头-->
+    <header>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th class="w-fixed-150">行政区代码</th>
+                    <th class="w-fixed-150">行政区简称</th>
+                    <th class="w-fixed-150">行政区名称</th>
+                    <th class="w-fixed-150">行政区类型</th>
+                    <th class="w-fixed-200">备注</th>
+                    <th class="w-fixed-200">创建时间</th>
+                    <th class="w-fixed-150">操作</th>
+                </tr>
+            </thead>
+        </table>
+    </header>
+    <!--主体-->
+    <main>
+        <table class="table table-striped table-bordered">
+            <tbody>
+                @foreach (var provinceLevel in base.Model)
+                {
+                    <tr>
+                        <td class="w-fixed-150">@provinceLevel.ProvinceCode</td>
+                        <td class="w-fixed-150">@provinceLevel.ShortName</td>
+                        <td class="w-fixed-150">@provinceLevel.ProvinceName</td>
+                        <td class="w-fixed-150">@provinceLevel.ProvinceType</td>
+                        <td class="w-fixed-200">@provinceLevel.Remark</td>
+                        <td class="w-fixed-200">@string.Format("{0:yyyy-MM-dd HH:mm:ss}", provinceLevel.CreatedTime)</td>
+                        <td class="w-fixed-150">
+                            <primary-link click="show_province_level('@provinceLevel.ProvinceCode');">
+                                <partial name="_LinkTextInfo" />
+                            </primary-link>
+                            &nbsp;
+                            <primary-link click="show_edit_province_level('@provinceLevel.ProvinceCode');">
+                                <partial name="_LinkTextEdit" />
+                            </primary-link>
+                            &nbsp;
+                            <danger-link click="remove_province_level('@provinceLevel.ProvinceCode');">
+                                <partial name="_LinkTextRemove" />
+                            </danger-link>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </main>
+</div>
+<!--分页-->
+<footer>
+    @await Html.PartialAsync("_Pagination", base.Model.GetPagination(functionName))
+</footer>

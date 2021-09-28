@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoIHome.Infrastructure.CloudEntity\AutoIHome.Infrastructure.CloudEntity.csproj" />
+    <ProjectReference Include="..\AutoIHome.Infrastructure.Framework\AutoIHome.Infrastructure.Framework.csproj" />
+    <ProjectReference Include="..\Base.RegManagement.Domain\Base.RegManagement.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

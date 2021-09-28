@@ -1,0 +1,70 @@
+﻿/*
+    自定义组件样式
+*/
+
+/*分页列表*/
+.paged-list {
+    width: 100%;
+    padding: 0px;
+}
+/*分页列表的表头主体控制*/
+.paged-list > div {
+    width: 100%;
+    height: 85%;
+    overflow-x: scroll;
+}
+/*分页列表的表头*/
+.paged-list > div > header {
+    width: auto;
+    height: 14%;
+    margin: 0px;
+    padding: 0px 16px 0px 0px;
+}
+/*分页列表的主体*/
+.paged-list > div > main {
+    width: auto;
+    height: 86%;
+    overflow-y: scroll;
+    margin: 0px;
+    padding: 0px;
+}
+/*分页列表的页尾*/
+.paged-list > footer {
+    width: 100%;
+    height: 15%;
+    padding: 10px 16px 0px 0px;
+}
+
+/*数据table样式*/
+.table-data {
+    caption-side: bottom;
+    border-collapse: collapse;
+    border-color: #dee2e6;
+    text-align: center;
+}
+.table-data thead{
+    background-color: #007bff;
+}
+.table-data thead tr th{
+    color: white;
+    font-size: 16px;
+    height: 42px;
+}
+.table-data thead tr th:hover{
+    background-color: #02b8d6;
+    color: #F36A5A !important;
+}
+.table-data tbody{
+    font-size: 14px;
+}
+.table-data tbody tr{
+    color: #555;
+    height: 40px;
+}
+.table-data tbody tr:hover{
+    background-color: #f8f9fa;
+    color: #02b8d6;
+}
+.table-data tbody tr td .fa{
+    font-size: 23px;
+}

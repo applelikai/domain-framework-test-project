@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AutoIHome.Core.Domain.CloudEntity\AutoIHome.Core.Domain.CloudEntity.csproj" />
+    <ProjectReference Include="..\AutoIHome.Infrastructure.CloudEntity\AutoIHome.Infrastructure.CloudEntity.csproj" />
+    <ProjectReference Include="..\Base.RegManagement.Domain.CloudEntity\Base.RegManagement.Domain.CloudEntity.csproj" />
+    <ProjectReference Include="..\Bootstrap.AspNetCore.TagHelpers\Bootstrap.AspNetCore.TagHelpers.csproj" />
+    <ProjectReference Include="..\Extension.OpenXml\Extension.OpenXml.csproj" />
+  </ItemGroup>
+
+</Project>

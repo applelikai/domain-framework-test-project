@@ -1,0 +1,34 @@
+﻿@model ObjectTypeCategory
+@{
+    Layout = "_ModalDialogForm";
+}
+
+<!--编辑基础类型分类表单-->
+<form action="javascript:void(0);" onsubmit="save_object_type_category(this);">
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">分类代码</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="CategoryCode" value="@base.Model.CategoryCode" readonly />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">分类名称</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="CategoryName" value="@base.Model.CategoryName" required />
+            <invalid-message>请输入分类名称</invalid-message>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">备注</label>
+        <div class="col-md-9">
+            <textarea class="form-control" name="Remark">@base.Model.Remark</textarea>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">排序时间</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" data-role="datetimepicker" name="SortedTime" value="@string.Format("{0:yyyy-MM-dd HH:mm:ss}", base.Model.SortedTime)" required />
+            <invalid-message>请选择排序时间</invalid-message>
+        </div>
+    </div>
+</form>

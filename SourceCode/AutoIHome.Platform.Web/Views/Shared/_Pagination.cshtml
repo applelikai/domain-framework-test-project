@@ -1,0 +1,39 @@
+﻿@model Pagination
+
+<div class="d-flex align-items-center justify-content-end">
+    <!--显示当前数据信息-->
+    <p class="text-muted mb-0 me-4 fw-light fst-italic fs-6">
+        第(<label for="PageIndex" class="text-info">@base.Model.PageIndex</label>/<label for="PageCount" class="text-info">@base.Model.PageCount</label>)页
+        &nbsp;
+        每页<label for="PageSize" class="text-info">@base.Model.PageSize</label>条
+        &nbsp;
+        总共<label for="Count" class="text-info">@base.Model.Count</label>条
+    </p>
+    <!--显示分页页码-->
+    <ul class="pagination mb-0">
+        <!--首页-->
+        <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="@($"{base.Model.FunctionName}(1);")">首页</a></li>
+        <!--上一个页码列表-->
+        <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="load_pages($(this).parents('.d-flex').parent().get(0), @base.Model.PreviousStartIndex);">&laquo;</a></li>
+        <!--显示页码列表-->
+        @for (int i = base.Model.StartIndex; i <= base.Model.EndIndex; i++)
+        {
+            if (i == base.Model.PageIndex)
+            {
+                <li class="page-item"><a class="page-link active" href="javascript:void(0);">@base.Model.PageIndex</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="@($"{base.Model.FunctionName}({i});")">@(i)</a></li>
+            }
+        }
+        <!--下一个页码列表-->
+        <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="load_pages($(this).parents('.d-flex').parent().get(0), @base.Model.NextStartIndex);">&raquo;</a></li>
+        <!--尾页-->
+        <li class="page-item"><a class="page-link" href="javascript:void(0);" onclick="@($"{base.Model.FunctionName}({base.Model.PageCount});")">尾页</a></li>
+    </ul>
+    <!--记录参数-->
+    <input type="hidden" name="PageSize" value="@base.Model.PageSize" />
+    <input type="hidden" name="PageIndex" value="@base.Model.PageIndex" />
+    <input type="hidden" name="FunctionName" value="@base.Model.FunctionName" />
+</div>

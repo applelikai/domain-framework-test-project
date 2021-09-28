@@ -1,0 +1,45 @@
+﻿@model IPagedList<User> 
+@{
+    string functionName = base.ViewBag.Function;
+    string linksViewName = base.ViewBag.LinksViewName;
+}
+
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>用户名</th>
+            <th>角色名称</th>
+            <th>员工姓名</th>
+            <th>录入时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in base.Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Role.RoleName</td>
+                <td>@user.Employee.EmployeeName</td>
+                <td>@string.Format("{0:yyyy-MM-dd HH:mm:ss}", user.CreatedTime)</td>
+                <td>
+                    <primary-link click="show_user('@user.UserId');">
+                        <partial name="_LinkTextInfo" />
+                    </primary-link>
+                    <!--加载其他操作-->
+                    @if (!string.IsNullOrEmpty(linksViewName))
+                    {
+                        await Html.RenderPartialAsync(linksViewName, user);
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="5">
+                @await Html.PartialAsync("_Pagination", base.Model.GetPagination(functionName))
+            </td>
+        </tr>
+    </tfoot>
+</table>

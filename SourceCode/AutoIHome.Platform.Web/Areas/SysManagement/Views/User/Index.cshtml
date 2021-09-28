@@ -1,0 +1,355 @@
+﻿@section scripts{
+    <!--添加引用-->
+    <script type="text/javascript" src="~/js/_references.js"></script>
+    <!--查询展示-->
+    <script type="text/javascript">
+        //获取展示操作元素链接的局部页面名称
+        function get_links_view_name() { return '@base.ViewBag.LinksViewName'; }
+        //获取展示分部视图的url
+        function get_url_for_show_view() { return '@Url.Action("ShowView")'; }
+        //获取显示用户列表的url
+        function get_url_for_show_users() { return '@Url.Action("ShowListPagedUsers")'; }
+        //获取显示用户详情的url
+        function get_url_for_show_user() { return '@Url.Action("ShowDetailUser")'; }
+        //获取显示编辑用户的url
+        function get_url_for_edit_user() { return '@Url.Action("ShowEditUser")'; }
+
+        //分页查询用户列表
+        function search_users(pageIndex, pageSize) {
+            //创建Table分页加载对象
+            let oTableLoader = new PageTableLoader('#main > div[data-name="main"] div[data-name="users"]', 5);
+            //指定查询url
+            oTableLoader.url = get_url_for_show_users();
+            //指定查询参数
+            oTableLoader.data = {
+                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                functionName: 'search_users',
+                linksViewName: get_links_view_name()
+            };
+            //加载数据
+            oTableLoader.load();
+        }
+        //显示用户详情
+        function show_user(userId) {
+            //创建容器对象
+            let oContainer = new ModalContentContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_show_user();
+            //指定参数
+            oContainer.data = { userId: userId };
+            //显示当前容器
+            oContainer.show();
+        }
+        //初始化设置编辑用户表单
+        function set_edit_user(form) {
+            //加载可选角色列表
+            load_search_roles(form.querySelector('input[name="RoleName"]'));
+            //加载可选员工列表
+            load_search_employees(form.querySelector('input[name="EmployeeName"]'));
+        }
+        //显示新建用户
+        function show_new_user() {
+            //创建容器对象
+            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_show_view();
+            //指定参数
+            oContainer.data = {
+                viewName: '_NewUser',
+                title: '新建用户'
+            };
+            //指定初始化表单的函数
+            oContainer.set_form = set_edit_user;
+            //显示当前容器
+            oContainer.show();
+        }
+        //显示编辑用户
+        function show_edit_user(userId) {
+            //创建容器对象
+            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            //指定url
+            oContainer.url = get_url_for_edit_user();
+            //指定参数
+            oContainer.data = { userId: userId };
+            //指定初始化表单的函数
+            oContainer.set_form = set_edit_user;
+            //显示当前容器
+            oContainer.show();
+        }
+    </script>
+    <!--提交修改-->
+    <script type="text/javascript">
+        //获取添加用户的url
+        function get_url_for_add_user() { return '@Url.Action("AddEntity")'; }
+        //获取保存用户的url
+        function get_url_for_save_user() { return '@Url.Action("SaveEntity")'; }
+        //获取删除用户的url
+        function get_url_for_remove_user() { return '@Url.Action("RemoveUser")'; }
+
+        //添加用户
+        function add_user(form) {
+            //创建表单提交对象
+            let oSubmitter = new DataFormSubmitter(form);
+            //指定提交地址
+            oSubmitter.url = get_url_for_add_user();
+            //指定执行成功后的回掉函数
+            oSubmitter.call_back = function () {
+                //重新查询
+                search_users(1);
+                //关闭编辑用户表单
+                close_edit_user($(form).parents('.modal-content'));
+            };
+            //执行提交
+            oSubmitter.submit();
+        }
+        //保存用户
+        function save_user(form) {
+            //创建表单提交对象
+            let oSubmitter = new DataFormSubmitter(form);
+            //指定提交地址
+            oSubmitter.url = get_url_for_save_user();
+            //指定执行成功后的回掉函数
+            oSubmitter.call_back = function () {
+                //重新查询
+                search_users();
+                //关闭编辑用户表单
+                close_edit_user($(form).parents('.modal-content'));
+            };
+            //执行提交
+            oSubmitter.submit();
+        }
+        //删除用户
+        function remove_user(userId) {
+            //创建数据提交对象
+            let oSubmitter = new DataSubmitter('确定删除当前用户吗?');
+            //指定提交地址
+            oSubmitter.url = get_url_for_remove_user();
+            //指定参数
+            oSubmitter.data = { userId: userId };
+            //指定提交完成后的回掉函数
+            oSubmitter.call_back = search_users;
+            //提交
+            oSubmitter.submit();
+        }
+    </script>
+    <!--点击选择角色-->
+    <script type="text/javascript">
+        //获取显示查询可选角色列表的url
+        function get_url_for_show_search_roles() { return '@Url.Action("ShowListSearchRoles", "Role")'; }
+        //获取显示可选角色列表的url
+        function get_url_for_show_select_roles() { return '@Url.Action("ShowListSelectRoles", "Role")'; }
+
+        //加载查询可选角色列表
+        function load_search_roles(element) {
+            //获取数据
+            let jData = {
+                pageIndex: 1,
+                pageSize: 5,
+                functionName: 'search_select_roles',
+                selectFunctionName: 'select_role'
+            };
+            //加载查询可选职位列表
+            $.post(get_url_for_show_search_roles(), jData, function (data, textStatus, jqXHR) {
+                //打印log
+                console.log(textStatus);
+                //新建悬停框
+                new bootstrap.Popover(element, {
+                    container: document.body,
+                    content: function () {
+                        let divContainer = document.createElement('div');
+                        divContainer.innerHTML = data;
+                        divContainer.id = 'div-select-roles';
+                        return divContainer;
+                    },
+                    html: true,
+                    placement: 'bottom'
+                });
+            }, 'html');
+        }
+        //分页查询可选角色列表
+        function search_select_roles(pageIndex, pageSize) {
+            //创建Table分页加载对象
+            let oTableLoader = new PageTableLoader('#div-select-roles > main', 3);
+            //指定查询url
+            oTableLoader.url = get_url_for_show_select_roles();
+            //指定查询参数
+            oTableLoader.data = {
+                searcher: $('#div-select-roles > form').serializeObject(),
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                functionName: 'search_select_roles',
+                selectFunctionName: 'select_role'
+            };
+            //加载数据
+            oTableLoader.load();
+        }
+        //选择当前角色
+        function select_role(sRoleId, sRoleName) {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //指定角色信息
+            form.querySelector('input[name="RoleId"]').value = sRoleId;
+            form.querySelector('input[name="RoleName"]').value = sRoleName;
+            //关闭当前悬停框
+            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="RoleName"]'));
+            oPopover.hide();
+        }
+        //关闭并取消选择角色列表
+        function close_search_select_roles() {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //清空角色信息
+            form.querySelector('input[name="RoleId"]').value = '';
+            form.querySelector('input[name="RoleName"]').value = '';
+            //关闭当前悬停框
+            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="RoleName"]'));
+            oPopover.hide();
+        }
+    </script>
+    <!--点击选择员工-->
+    <script type="text/javascript">
+        //获取显示查询可选员工列表的url
+        function get_url_for_show_search_employees() { return '@Url.Action("ShowListSearchEmployees", "Employee", new { area = "EmpManagement" })'; }
+        //获取显示可选员工列表的url
+        function get_url_for_show_select_employees() { return '@Url.Action("ShowListSelectEmployees", "Employee", new { area = "EmpManagement" })'; }
+
+        //加载查询可选员工列表
+        function load_search_employees(element) {
+            //获取数据
+            let jData = {
+                pageIndex: 1,
+                pageSize: 5,
+                functionName: 'search_select_employees',
+                selectFunctionName: 'select_employee'
+            };
+            //加载查询可选职位列表
+            $.post(get_url_for_show_search_employees(), jData, function (data, textStatus, jqXHR) {
+                //打印log
+                console.log(textStatus);
+                //新建悬停框
+                new bootstrap.Popover(element, {
+                    container: document.body,
+                    content: function () {
+                        let divContainer = document.createElement('div');
+                        divContainer.innerHTML = data;
+                        divContainer.id = 'div-select-employees';
+                        return divContainer;
+                    },
+                    html: true,
+                    placement: 'left'
+                });
+            }, 'html');
+        }
+        //分页查询可选员工列表
+        function search_select_employees(pageIndex, pageSize) {
+            //创建Table分页加载对象
+            let oTableLoader = new PageTableLoader('#div-select-employees > main', 4);
+            //指定查询url
+            oTableLoader.url = get_url_for_show_select_employees();
+            //指定查询参数
+            oTableLoader.data = {
+                searcher: $('#div-select-employees > form').serializeObject(),
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                functionName: 'search_select_employees',
+                selectFunctionName: 'select_employee'
+            };
+            //加载数据
+            oTableLoader.load();
+        }
+        //选择当前员工
+        function select_employee(sEmployeeNo, sEmployeeName) {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //指定员工信息
+            form.querySelector('input[name="EmployeeNo"]').value = sEmployeeNo;
+            form.querySelector('input[name="EmployeeName"]').value = sEmployeeName;
+            //关闭当前悬停框
+            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="EmployeeName"]'));
+            oPopover.hide();
+        }
+        //关闭并取消选择员工列表
+        function close_search_select_employees() {
+            //获取当前表单
+            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            //清空员工信息
+            form.querySelector('input[name="EmployeeNo"]').value = '';
+            form.querySelector('input[name="EmployeeName"]').value = '';
+            //关闭当前悬停框
+            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="EmployeeName"]'));
+            oPopover.hide();
+        }
+    </script>
+    <!--初始化-->
+    <script type="text/javascript">
+        $(function () {
+            //默认查询第一页的用户列表
+            search_users(1);
+        })
+    </script>
+}
+@section navigation{
+    <li class="breadcrumb-item">
+        <a asp-area="" asp-controller="Home" asp-action="Index">主页</a>
+    </li>
+    <li class="breadcrumb-item">系统设置</li>
+    <li class="breadcrumb-item active" aria-current="page">@base.ViewData["Title"]</li>
+}
+
+<!--查询表单-->
+<form class="bg-white pt-3 pb-3" role="search">
+    <div class="row">
+        <div class="col-md-3 row">
+            <label class="col-md-4 col-form-label text-end">用户名:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="UserName" />
+            </div>
+        </div>
+        <div class="col-md-3 row">
+            <label class="col-md-4 col-form-label text-end">角色名称:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="RoleName" />
+            </div>
+        </div>
+        <div class="col-md-3 row">
+            <label class="col-md-4 col-form-label text-end">员工姓名:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="EmployeeName" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <primary-button click="search_users(1);">
+                <partial name="_ButtonTextSearch" />
+            </primary-button>
+            &nbsp;
+            <primary-button click="show_new_user();">
+                <partial name="_ButtonTextNew" />
+            </primary-button>
+        </div>
+    </div>
+</form>
+<!--数据展示-->
+<div class="bg-white w-100 mt-2 p-0" data-name="users">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>用户名</th>
+                <th>角色名称</th>
+                <th>员工姓名</th>
+                <th>录入时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <td colspan="5">
+                    <input type="hidden" name="PageSize" value="10" />
+                    <input type="hidden" name="PageIndex" value="1" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

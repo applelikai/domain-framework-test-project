@@ -1,0 +1,13 @@
+﻿<!--modal-content里面的内容模板-->
+<partial name="_ModalContentHeader" />
+<div class="modal-body">
+    @base.RenderBody()
+</div>
+<div class="modal-footer">
+    <primary-button class="me-2" click="$(this).parents('.modal-content').find('form').submit();">
+        <i class="fa fa-save"></i>&nbsp;保&nbsp;存
+    </primary-button>
+    <secondary-button class="me-5" click="go_back($(this).parents('.modal-content'));">
+        取&nbsp;&nbsp;消
+    </secondary-button>
+</div>

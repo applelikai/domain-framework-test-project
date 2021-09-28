@@ -1,0 +1,40 @@
+﻿@{
+    Layout = "_ModalContentForm";
+}
+
+<!--新建用户表单-->
+<form action="javascript:void(0);" onsubmit="add_user(this);">
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">用户名</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="UserName" required />
+                <invalid-message>请输入用户名</invalid-message>
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">角色名称</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="RoleName" data-bs-toggle="popover" required />
+                <invalid-message>请选择角色</invalid-message>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">员工编号</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="EmployeeNo" readonly />
+            </div>
+        </div>
+        <div class="col-md-6 row">
+            <label class="col-md-4 col-form-label text-end">员工姓名</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="EmployeeName" data-bs-toggle="popover" />
+            </div>
+        </div>
+    </div>
+    <!--隐藏变量-->
+    <input type="hidden" name="UserId" value="@GuidHelper.NewOrdered().ToString()" />
+    <input type="hidden" name="RoleId" />
+</form>

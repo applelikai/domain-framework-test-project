@@ -1,0 +1,36 @@
+﻿@model ObjectTypeCategory
+@{
+    Layout = "_ModalDialogForm";
+}
+
+<!--新建基础类型表单-->
+<form action="javascript:void(0);" onsubmit="add_object_type(this);">
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">类型分类</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="CategoryName" value="@base.Model.CategoryName" readonly />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">类型名称</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="TypeName" required />
+            <invalid-message>请输入类型名称</invalid-message>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">备注</label>
+        <div class="col-md-9">
+            <textarea class="form-control" name="Remark"></textarea>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">排序时间</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="SortedTime" placeholder="插入时的操作时间" readonly />
+        </div>
+    </div>
+    <!--隐藏变量-->
+    <input type="hidden" name="TypeId" value="@GuidHelper.NewOrdered().ToString()" />
+    <input type="hidden" name="CategoryCode" value="@base.Model.CategoryCode" />
+</form>

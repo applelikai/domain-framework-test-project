@@ -1,0 +1,14 @@
+﻿@model IPagedList<ObjectType>
+@{
+    Layout = "_ModalContentList";
+}
+@section toolbar{
+    <primary-button click="show_new_object_type('@base.ViewData["CategoryCode"]');">
+        <partial name="_ButtonTextNew" />
+    </primary-button>
+    <!--隐藏变量-->
+    <input type="hidden" name="CategoryCode" value="@base.ViewData["CategoryCode"]" />
+}
+
+<!--显示基础类型分类列表-->
+@await Html.PartialAsync("_ListPagedObjectTypes", base.Model)

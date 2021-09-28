@@ -1,0 +1,44 @@
+﻿@model IPagedList<ProvinceLevel>
+@{
+    string function = base.ViewBag.Function;
+}
+
+<!--头-->
+<nav class="nav">
+    <!--标题-->
+    <h5 class="me-auto text-primary"><i class="fa fa-cogs"></i> @base.ViewData["Title"]</h5>
+    <!--关闭按钮-->
+    <button class="btn-close" type="button" onclick="close_@(function)();"></button>
+</nav>
+<!--查询表单-->
+<form class="container-fluid mb-2">
+    <div class="row">
+        <div class="col-md-5 row">
+            <label class="col-md-5 col-form-label text-end">行政区名称:</label>
+            <div class="col-md-7">
+                <input class="form-control" type="text" name="ProvinceName" />
+            </div>
+        </div>
+        <div class="col-md-5 row">
+            <label class="col-md-5 col-form-label text-end">行政区类型:</label>
+            <div class="col-md-7">
+                <select class="form-select" name="ProvinceType">
+                    <option value="">=所有行政区类型=</option>
+                    @foreach (string provinceType in ProvinceLevel.ProvinceTypes)
+                    {
+                        <option value="@provinceType">@provinceType</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <primary-button click="@($"{function}(1);")">
+                <partial name="_ButtonTextSearch" />
+            </primary-button>
+        </div>
+    </div>
+</form>
+<!--主体:分页显示省级行政区列表-->
+<main>
+    @await Html.PartialAsync("_ListSelectProvinceLevels", base.Model)
+</main>

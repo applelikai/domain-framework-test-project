@@ -1,0 +1,41 @@
+﻿@model IPagedList<Job>
+@{
+    string functionName = base.ViewBag.Function;
+}
+
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>职位名称</th>
+            <th>备注</th>
+            <th>录入时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var job in base.Model)
+        {
+            <tr>
+                <td>@job.JobName</td>
+                <td>@job.Remark</td>
+                <td>@string.Format("{0:yyyy-MM-dd HH:mm:ss}", job.CreatedTime)</td>
+                <td>
+                    <primary-link click="show_edit_job('@job.JobId');">
+                        <partial name="_LinkTextEdit" />
+                    </primary-link>
+                    &nbsp;
+                    <danger-link click="remove_job('@job.JobId');">
+                        <partial name="_LinkTextRemove" />
+                    </danger-link>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4">
+                @await Html.PartialAsync("_Pagination", base.Model.GetPagination(functionName))
+            </td>
+        </tr>
+    </tfoot>
+</table>

@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_ModalDialogForm";
+}
+
+<!--新建角色表单-->
+<form action="javascript:void(0);" onsubmit="add_role(this);">
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">角色名称</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="RoleName" required />
+            <invalid-message>请输入角色名称</invalid-message>
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">备注</label>
+        <div class="col-md-9">
+            <textarea class="form-control" name="Remark"></textarea>
+        </div>
+    </div>
+    <!--隐藏变量-->
+    <input type="hidden" name="RoleId" value="@GuidHelper.NewOrdered().ToString()" />
+</form>

@@ -1,0 +1,18 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+#忽略的文件类型
+*.user
+*.suo
+
+#忽略的文件夹
+bin/
+obj/
+Debug/
+Release/
+logs/
+
+#忽略的具体文件夹目录
+/SourceCode/.vs
+/SourceCode/AutoIHome.Platform.Web/wwwroot/Temp

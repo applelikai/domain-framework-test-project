@@ -1,0 +1,46 @@
+/*重写bootstrap样式*/
+
+/*重写悬停框样式*/
+.popover{
+    min-width:300px;
+    max-width:800px;
+}
+/*重写table样式*/
+.table {
+    text-align: center;
+}
+.table thead{
+    background-color: #007bff;
+}
+.table thead tr th{
+    color: white;
+    font-size: 16px;
+    height: 42px;
+}
+.table thead tr th:hover{
+    background-color: #02b8d6;
+    color: #F36A5A !important;
+}
+.table tbody{
+    font-size: 14px;
+}
+.table tbody tr{
+    color: #555;
+    height: 40px;
+}
+.table tbody tr:hover{
+    background-color: #f8f9fa;
+    color: #02b8d6;
+}
+.table tbody tr td .fa{
+    font-size: 23px;
+}
+/*重写分页样式*/
+.page-link{
+    font-size: 14px;
+    color: #007bff;
+}
+.page-link.active{
+    background-color: #007bff;
+    color: white !important;
+}
