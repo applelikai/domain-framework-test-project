@@ -1,0 +1,321 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Domain.Framework.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Domain.Framework.Core.Factories.FactoryContainerBase">
+            <summary>
+            工厂容器基类
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Factories.FactoryContainerBase._repositoryFactoriesLocker">
+            <summary>
+            数据库仓库工厂字典线程锁对象
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Factories.FactoryContainerBase._serviceFactoriesLocker">
+            <summary>
+            数据库业务工厂字典线程锁对象
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Factories.FactoryContainerBase._extensionServiceFactoriesLocker">
+            <summary>
+            第三方业务工厂字典线程锁对象
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Factories.FactoryContainerBase._repositoryFactories">
+            <summary>
+            数据库仓库工厂字典
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Factories.FactoryContainerBase._serviceFactories">
+            <summary>
+            数据库业务工厂字典
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Factories.FactoryContainerBase._extensionServiceFactories">
+            <summary>
+            第三方业务工厂字典
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.CreateRepositoryFactory(System.String)">
+            <summary>
+            创建数据库仓库工厂对象
+            </summary>
+            <param name="assemblyName">程序集名称</param>
+            <returns>数据库仓库工厂对象</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.CreateServiceFactory(System.String)">
+            <summary>
+            创建数据库业务工厂对象
+            </summary>
+            <param name="assemblyName">程序集名称</param>
+            <returns>数据库业务工厂对象</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.CreateExtensionServiceFactory(System.String)">
+            <summary>
+            创建第三方业务工厂对象
+            </summary>
+            <param name="extensionkillName">第三方技术名称</param>
+            <returns>第三方业务工厂对象</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.#ctor">
+            <summary>
+            初始化
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.GetExtensionSkillName(System.Type)">
+            <summary>
+            获取第三方技术名称
+            </summary>
+            <param name="serviceBaseType">第三方业务基类类型</param>
+            <returns>第三方技术名称</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.GetRepositoryFactory(System.String)">
+            <summary>
+            获取仓库工厂对象
+            </summary>
+            <param name="assemblyName">程序集名称</param>
+            <returns>仓库工厂对象</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.GetServiceFactory(System.String)">
+            <summary>
+            获取业务工厂对象
+            </summary>
+            <param name="assemblyName">程序集名称</param>
+            <returns>业务工厂对象</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.FactoryContainerBase.GetExtensionServiceFactory(System.String)">
+            <summary>
+            获取第三方业务工厂对象
+            </summary>
+            <param name="extensionkillName">第三方技术名称</param>
+            <returns>第三方业务工厂对象</returns>
+        </member>
+        <member name="T:Domain.Framework.Core.Factories.IRepositoryFactory">
+            <summary>
+            创建仓库的工厂
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.IRepositoryFactory.Create``1">
+            <summary>
+            创建仓库对象
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <returns>仓库对象</returns>
+        </member>
+        <member name="T:Domain.Framework.Core.Factories.IServiceFactory">
+            <summary>
+            创建业务实现对象的工厂
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Factories.IServiceFactory.Create``1">
+            <summary>
+            创建业务实现对象
+            </summary>
+            <typeparam name="TService">业务接口类型</typeparam>
+            <returns>业务实现对象</returns>
+        </member>
+        <member name="T:Domain.Framework.Core.Repositories.IRepository`1">
+            <summary>
+            仓库接口
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.Add(`0)">
+            <summary>
+            添加实体
+            </summary>
+            <param name="entity">实体</param>
+            <returns>受影响行数</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.Save(`0)">
+            <summary>
+            保存实体信息至数据库
+            </summary>
+            <param name="entity">实体</param>
+            <returns>受影响行数</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.Set``1(``0,System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            设置符合条件的实体对象的值
+            </summary>
+            <typeparam name="TModel">存储值的对象类型</typeparam>
+            <param name="model">存储值的对象</param>
+            <param name="predicate">实体对象筛选条件</param>
+            <returns>受影响行数</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.Remove(`0)">
+            <summary>
+            删除实体
+            </summary>
+            <param name="entity">实体</param>
+            <returns>受影响行数</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.RemoveAll(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            删除符合条件的实体对象
+            </summary>
+            <param name="predicate">实体对象筛选条件</param>
+            <returns>受影响行数</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.GetCount(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            获取满足条件的实体数量
+            </summary>
+            <param name="predicate">对象筛选条件</param>
+            <returns>满足条件的实体数量</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.Get(System.Object)">
+            <summary>
+            获取单个实体信息
+            </summary>
+            <param name="id">实体ID</param>
+            <returns>单个实体信息</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.Get(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            获取符合条件的单个实体对象
+            </summary>
+            <param name="predicate">实体对象查询表达式</param>
+            <returns>单个实体对象</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.GetAll">
+            <summary>
+            获取所有的实体
+            </summary>
+            <returns>所有的实体</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.GetFiltered(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            获取符合条件的实体对象列表
+            </summary>
+            <param name="predicate">实体对象筛选条件</param>
+            <returns>符合条件的实体对象列表</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.GetSelect``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            获取投影对象列表
+            </summary>
+            <typeparam name="TElement">投影类型</typeparam>
+            <param name="selector">指定映射表达式</param>
+            <returns>投影对象列表</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.IRepository`1.GetSelect``1(System.Linq.Expressions.Expression{System.Func{`0,``0}},System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            获取符合条件的投影对象列表
+            </summary>
+            <typeparam name="TElement">投影类型</typeparam>
+            <param name="selector">指定映射表达式</param>
+            <param name="predicate">对象筛选条件</param>
+            <returns>投影对象列表</returns>
+        </member>
+        <member name="T:Domain.Framework.Core.Repositories.RepositoryContainer">
+            <summary>
+            仓库容器类
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Repositories.RepositoryContainer._locker">
+            <summary>
+            线程锁
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Repositories.RepositoryContainer._factoryContainer">
+            <summary>
+            工厂容器
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Repositories.RepositoryContainer._repositories">
+            <summary>
+            仓库字典
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.RepositoryContainer.#cctor">
+            <summary>
+            静态初始化
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Repositories.RepositoryContainer.Get``1">
+            <summary>
+            获取仓库对象
+            </summary>
+            <typeparam name="TEntity">实体类型</typeparam>
+            <returns>仓库</returns>
+        </member>
+        <member name="T:Domain.Framework.Core.Services.ServiceContainer">
+            <summary>
+            业务对象容器类
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Services.ServiceContainer._locker">
+            <summary>
+            线程锁对象
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Services.ServiceContainer._factoryContainer">
+            <summary>
+            工厂容器
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.Services.ServiceContainer._services">
+            <summary>
+            业务对象字典
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Services.ServiceContainer.GetFactory(System.Type)">
+            <summary>
+            获取创建业务实现对象的工厂
+            </summary>
+            <param name="serviceBaseType">业务基类类型</param>
+            <returns>创建业务实现对象的工厂</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.Services.ServiceContainer.#cctor">
+            <summary>
+            静态初始化
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.Services.ServiceContainer.Get``1">
+            <summary>
+            获取业务处理对象
+            </summary>
+            <typeparam name="TService">业务对象类型</typeparam>
+            <returns>业务处理对象</returns>
+        </member>
+        <member name="T:Domain.Framework.Core.ContainerBase`1">
+            <summary>
+            容器基类
+            </summary>
+            <typeparam name="TElement">元素类型</typeparam>
+        </member>
+        <member name="F:Domain.Framework.Core.ContainerBase`1._locker">
+            <summary>
+            线程锁
+            </summary>
+        </member>
+        <member name="F:Domain.Framework.Core.ContainerBase`1._cache">
+            <summary>
+            元素缓存
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.ContainerBase`1.Create(System.String)">
+            <summary>
+            创建元素对象
+            </summary>
+            <param name="key">元素key</param>
+            <returns>元素对象</returns>
+        </member>
+        <member name="M:Domain.Framework.Core.ContainerBase`1.#ctor">
+            <summary>
+            初始化
+            </summary>
+        </member>
+        <member name="M:Domain.Framework.Core.ContainerBase`1.Get(System.String)">
+            <summary>
+            获取元素
+            </summary>
+            <param name="key">元素key</param>
+            <returns>元素对象</returns>
+        </member>
+    </members>
+</doc>
