@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace AutoIHome.Platform.Web.Filters
 {
     /// <summary>
-    /// 菜单标识
+    /// 父级菜单标识
     /// </summary>
-    public class MenuAttribute : ActionFilterAttribute
+    public class ParentMenuAttribute : ActionFilterAttribute
     {
         /// <summary>
         /// 菜单名称
@@ -17,7 +17,7 @@ namespace AutoIHome.Platform.Web.Filters
         /// 菜单标识
         /// </summary>
         /// <param name="menuName">菜单名称</param>
-        public MenuAttribute(string menuName)
+        public ParentMenuAttribute(string menuName)
         {
             _menuName = menuName;
         }
@@ -32,7 +32,7 @@ namespace AutoIHome.Platform.Web.Filters
             if (controller == null)
                 return;
             //指定当前菜单
-            controller.ViewData["Menu"] = _menuName;
+            controller.ViewData["ParentMenu"] = _menuName;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AutoIHome.Infrastructure.Framework.CloudEntity;
+﻿using AutoIHome.Core.Domain.Entities.SysManagement;
+using AutoIHome.Infrastructure.Framework.CloudEntity;
 using Base.RegManagement.Domain.Entities;
 using CloudEntity.Data.Entity;
 using Microsoft.Extensions.Configuration;
@@ -36,9 +37,9 @@ namespace AutoIHome.Platform.Test
         private static void Main(string[] args)
         {
             //获取数据容器
-            IDbContainer container = _containerSet.Get("Base.RegManagement.Domain");
+            IDbContainer container = _containerSet.Get("AutoIHome.Core.Domain");
             //其他操作
-            container.InitTable<CountyLevel>();
+            container.InitTable<Role>();
         }
     }
 }

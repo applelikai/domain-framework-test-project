@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width" />
-        <title>车艾家-@base.ViewData["Title"]</title>
+        <title>汽车平台-@base.ViewData["Title"]</title>
         <!--样式-->
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
         <link rel="stylesheet" href="~/lib/layui/css/layui.css" />
@@ -18,11 +18,90 @@
         <script type="text/javascript" src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript" src="~/lib/bootbox/bootbox.all.min.js"></script>
         <script type="text/javascript" src="~/lib/pnotify/umd/PNotify.js"></script>
-        <script type="text/javascript" src="~/js/ext-jquery.js"></script>
-        <script type="text/javascript" src="~/js/ext-utils.js"></script>
-        <script type="text/javascript" src="~/js/ext-loaders.js"></script>
-        <script type="text/javascript" src="~/js/ext-containers.js"></script>
-        <script type="text/javascript" src="~/js/ext-submitters.js"></script>
+        <script type="text/javascript" src="~/js/base.js"></script>
+        <script type="text/javascript" src="~/js/loaders.js"></script>
+        <script type="text/javascript" src="~/js/containers.js"></script>
+        <script type="text/javascript" src="~/js/submitters.js"></script>
+        <script type="text/javascript" src="~/js/utils.js"></script>
+        <!--页面基础函数-->
+        <script type="text/javascript">
+            //切换尾标识类样式
+            function change_end_fa_class(a, sAfterClass, aClass) {
+                //获取尾标识
+                let iEnd = a.querySelector('.' + sAfterClass);
+                //切换类样式
+                iEnd.classList.remove(sAfterClass);
+                iEnd.classList.add(aClass);
+            }
+            //打开子菜单集合
+            function show_child_menus(a) {
+                //获取子菜单列表
+                let ulChildMenus = a.parentElement.querySelector('ul');
+                //若打开则关闭
+                if (ulChildMenus.classList.contains('show')) {
+                    //取消选中状态
+                    a.classList.remove('active');
+                    //关闭尾标识
+                    change_end_fa_class(a, 'fa-angle-down', 'fa-angle-right');
+                    //关闭
+                    $(ulChildMenus).slideUp();
+                    ulChildMenus.classList.remove('show');
+                    return;
+                }
+
+                //获取之前选中的标签
+                let aAfter = a.parentElement.parentElement.querySelector('.active');
+                //若存在则取消其选中状态
+                if (aAfter != undefined) {
+                    //取消其选中状态
+                    aAfter.classList.remove('active');
+                    //关闭尾标识
+                    change_end_fa_class(aAfter, 'fa-angle-down', 'fa-angle-right');
+                    //若关闭则关闭其它菜单下子菜单
+                    $(aAfter).next().slideUp();
+                    $(aAfter).next().removeClass('show');
+                }
+
+                //选中当前菜单
+                $(a).addClass('active');
+                //打开尾标识
+                change_end_fa_class(a, 'fa-angle-right', 'fa-angle-down');
+                //打开当前菜单
+                $(ulChildMenus).slideDown();
+                ulChildMenus.classList.add('show');
+            }
+            //显示模块菜单
+            function show_module_menus(sModuleName) {
+                //遍历所有的模块按钮
+                document.querySelectorAll('#div-modules > button').forEach(function (button) {
+                    //若为当前模块按钮
+                    if (button.getAttribute('data-name') === sModuleName) {
+                        //若未选中则选中
+                        if (!button.classList.contains('active'))
+                            button.classList.add('active');
+                        //退出
+                        return;
+                    }
+                    //若按钮不为当前模块按钮,已选中则取消选中状态
+                    if (button.classList.contains('active'))
+                        button.classList.remove('active');
+                });
+                //遍历所有模块菜单列表
+                document.querySelectorAll('#div-menus > ul').forEach(function (ul) {
+                    //若为当前模块
+                    if (ul.getAttribute('data-name') === sModuleName) {
+                        //若没有显示则显示
+                        if (ul.classList.contains('d-none'))
+                            ul.classList.remove('d-none');
+                        //退出
+                        return;
+                    }
+                    //若为其他模块,没有隐藏则隐藏
+                    if (!ul.classList.contains('d-none'))
+                        ul.classList.add('d-none');
+                });
+            }
+        </script>
         <!--bootstrap初始化函数-->
         <script type="text/javascript">
             //初始化加载所有的提示框
@@ -68,6 +147,8 @@
         <script type="text/javascript">
             //获取模块名称
             function get_module_name() { return '@base.ViewData["Module"]'; }
+            //获取父级菜单名称
+            function get_parent_menu_name() { return '@base.ViewData["ParentMenu"]'; }
             //获取菜单名称
             function get_menu_name() { return '@base.ViewData["Menu"]'; }
 
@@ -75,34 +156,26 @@
             function select_menu() {
                 //若模块名称为空则退出
                 let sModuleName = get_module_name();
-                if (sModuleName == '')
+                if (sModuleName === '')
                     return;
+                //显示模块菜单
+                show_module_menus(sModuleName);
+                //若父级菜单为空则退出
+                let sParentMenuName = get_parent_menu_name();
+                if (sParentMenuName === '')
+                    return;
+                //获取模块菜单ul
+                let ulModule = document.querySelector('#div-menus > ul[data-name="' + sModuleName + '"]');
+                //获取父级菜单li
+                let liParentMenu = ulModule.querySelector('li[data-name="' + sParentMenuName + '"]');
+                //打开子菜单集合
+                show_child_menus(liParentMenu.querySelector('a'));
                 //若菜单名称为空则退出
                 let sMenuName = get_menu_name();
                 if (sMenuName == '')
                     return;
-                //选中一级菜单
-                document.querySelector('#ul-sidebar > .nav-item[data-name="' + sModuleName + '"] .nav-link').classList.add('active');
-                //获取二级菜单集合所在的模块
-                let ulModule = document.querySelector('#nav-child-menus > .navbar-nav[data-name="' + sModuleName + '"]');
-                //展开子菜单集合
-                ulModule.classList.remove('d-none');
-                //选中二级菜单
-                ulModule.querySelector('.nav-item[data-name="' + sMenuName + '"] > .nav-link').classList.add('active');
-            }
-        </script>
-        <!--页面函数-->
-        <script type="text/javascript">
-            //展示子菜单集合
-            function show_child_menus(a) {
-                //取消其他选择项
-                $('#ul-sidebar .active').removeClass('active');
-                //设置当前a标签为选中状态
-                $(a).addClass('active');
-                //展示子菜单
-                var sModule = $(a).parent().attr('data-name');
-                $('#nav-child-menus .navbar-nav[data-name!="' + sModule + '"]').addClass('d-none');
-                $('#nav-child-menus .navbar-nav[data-name="' + sModule + '"]').removeClass('d-none');
+                //选中菜单
+                liParentMenu.querySelector('li[data-name="' + sMenuName + '"] > a').classList.add('active');
             }
         </script>
         <!--分页-->
@@ -165,365 +238,272 @@
     <body>
         <!--页头-->
         <header class="row">
-            <nav class="col-md-4 navbar left">
-                <i class="fa fa-2x fa-car text-info">平台管理</i>
+            <nav class="col-md-4 navbar">
+                <h3 class="text-info">
+                    <i class="fa fa-car"></i> 平台管理
+                </h3>
             </nav>
-            <nav class="col-md-8 navbar justify-content-end">
-                <div class="col-md-2 text-end">
-                    <i class="text-primary">@base.ViewData["UserName"]</i>
-                    &nbsp;
-                    <primary-link click="show_edit_password();">
-                        <i class="fa fa-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="修改密码"></i>
-                    </primary-link>
-                    &nbsp;
-                    <a class="text-primary" asp-area="" asp-controller="Home" asp-action="Logout">
-                        <i class="fa fa-power-off" data-bs-toggle="tooltip" data-bs-placement="bottom" title="登出"></i>
-                    </a>
+            <nav class="col-md-8 navbar">
+                <div class="col-md-10 d-flex flex-md-row" id="div-modules">
+                    <button class="btn btn-outline-primary parallelogram active" data-name="basic-management" onclick="show_module_menus(this.getAttribute('data-name'));">
+                        <span>基础平台</span>
+                    </button>
+                    <button class="btn btn-outline-primary parallelogram" data-name="auto-repair-management" onclick="show_module_menus(this.getAttribute('data-name'));">
+                        <span>汽修平台</span>
+                    </button>
+                    <button class="btn btn-outline-primary parallelogram" data-name="data-management" onclick="show_module_menus(this.getAttribute('data-name'));">
+                        <span>数据中心</span>
+                    </button>
+                </div>
+                <div class="col-md-2 row">
+                    <div class="dropdown col-md-12">
+                        <a class="dropdown-toggle float-end" href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-expanded="false">@base.ViewData["UserName"]</a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">
+                                <a class="dropdown-item-text" href="javascript:void(0);" onclick="show_edit_password();">
+                                    <i class="fa fa-edit"></i>&nbsp;修改密码
+                                </a>
+                            </li>
+                            <li class="dropdown-item">
+                                <a class="dropdown-item-text" asp-area="" asp-controller="Home" asp-action="Logout">
+                                    <i class="fa fa-power-off"></i>&nbsp;退出登录
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
         </header>
         <!--主体内容-->
         <div class="row" id="div-content">
             <!--左边菜单-->
-            <div class="col-md-2 h-100">
-                <ul class="nav flex-column" id="ul-sidebar">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                            <i class="fa fa-home"></i>
-                            <span>主&nbsp;&nbsp;&nbsp;&nbsp;页</span>
+            <div class="col-md-2" id="div-menus">
+                <!--基础平台-->
+                <ul data-name="basic-management">
+                    <li data-type="parent-menu" data-name="doc-management">
+                        <a href="javascript:void(0);" onclick="show_child_menus(this);">
+                            <i class="fa fa-book"></i>
+                            <span>文档管理</span>
+                            <i class="fa fa-angle-right"></i>
                         </a>
+                        <!--文档管理下的菜单-->
+                        <ul class="collapse">
+                            <li data-type="menu" data-name="edit-article-categories">
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-th-list"></i>
+                                    <span>文章类目</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item" data-name="vehicle-owner">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
-                            <i class="fa fa-car"></i>
-                            <span>车主服务</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" data-name="member-management">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
-                            <i class="fa fa-address-book"></i>
-                            <span>会员管理</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" data-name="inventory-management">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
-                            <i class="fa fa-database"></i>
-                            <span>库存管理</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" data-name="emp-management">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
+                    <li data-type="parent-menu" data-name="emp-management">
+                        <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-user"></i>
                             <span>员工管理</span>
+                            <i class="fa fa-angle-right"></i>
                         </a>
+                        <!--员工管理下的菜单-->
+                        <ul class="collapse">
+                            <li data-type="menu" data-name="edit-departments">
+                                <a asp-area="EmpManagement" asp-controller="Department" asp-action="Index">
+                                    <i class="fa fa-users"></i>
+                                    <span>部门管理</span>
+                                </a>
+                            </li>
+                            <li data-type="menu" data-name="edit-jobs">
+                                <a asp-area="EmpManagement" asp-controller="Job" asp-action="Index">
+                                    <i class="fa fa-wrench"></i>
+                                    <span>职位管理</span>
+                                </a>
+                            </li>
+                            <li data-type="menu" data-name="edit-employees">
+                                <a asp-area="EmpManagement" asp-controller="Employee" asp-action="Index">
+                                    <i class="fa fa-user"></i>
+                                    <span>员工管理</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item" data-name="reg-management">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
+                    <li data-type="parent-menu" data-name="right-management">
+                        <a href="javascript:void(0);" onclick="show_child_menus(this);">
+                            <i class="fa fa-cog"></i>
+                            <span>权限管理</span>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                        <!--权限管理下的二级菜单-->
+                        <ul class="collapse">
+                            <li data-type="menu" data-name="edit-roles">
+                                <a asp-area="SysManagement" asp-controller="Role" asp-action="Index">
+                                    <i class="fa fa-user-circle"></i>
+                                    <span>角色管理</span>
+                                </a>
+                            </li>
+                            <li data-type="menu" data-name="edit-role-rights">
+                                <a asp-area="SysManagement" asp-controller="Role" asp-action="Right">
+                                    <i class="fa fa-user-circle"></i>
+                                    <span>角色授权</span>
+                                </a>
+                            </li>
+                            <li data-type="menu" data-name="edit-users">
+                                <a asp-area="SysManagement" asp-controller="User" asp-action="Index">
+                                    <i class="fa fa-user"></i>
+                                    <span>用户管理</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!--汽修平台-->
+                <ul class="d-none" data-name="auto-repair-management">
+                    <li data-type="parent-menu" data-name="vehicle-owner">
+                        <a href="javascript:void(0);" onclick="show_child_menus(this);">
+                            <i class="fa fa-car"></i>
+                            <span>车主服务</span>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                        <!--车主服务下的菜单-->
+                        <ul class="collapse">
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-times-circle"></i>
+                                    <span>预约记录</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-pie-chart"></i>
+                                    <span>营业日报</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-area-chart"></i>
+                                    <span>产值汇总</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-database"></i>
+                                    <span>项目分析</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-comment"></i>
+                                    <span>车主评价</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li data-type="parent-menu" data-name="member-management">
+                        <a href="javascript:void(0);" onclick="show_child_menus(this);">
+                            <i class="fa fa-address-book"></i>
+                            <span>会员管理</span>
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                        <!--会员管理下的菜单-->
+                        <ul class="collapse">
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-users"></i>
+                                    <span>会员列表</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-users"></i>
+                                    <span>全部客户</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-comments"></i>
+                                    <span>群发消息</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-clock-o"></i>
+                                    <span>生日提醒</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-clock-o"></i>
+                                    <span>售后提醒</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-phone"></i>
+                                    <span>电话回访</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="fa fa-file-excel-o"></i>
+                                    <span>客户导入</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <!--数据中心-->
+                <ul class="d-none" data-name="data-management">
+                    <li data-type="parent-menu" data-name="reg-management">
+                        <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-area-chart"></i>
                             <span>区域管理</span>
+                            <i class="fa fa-angle-right"></i>
                         </a>
+                        <!--区域管理下的菜单-->
+                        <ul class="collapse" data-name="reg-management">
+                            <li data-type="menu" data-name="edit-province-levels">
+                                <a asp-area="RegManagement" asp-controller="ProvinceLevel" asp-action="Index">
+                                    <i class="fa fa-area-chart"></i>
+                                    <span>省级行政区</span>
+                                </a>
+                            </li>
+                            <li data-type="menu" data-name="edit-prefecture-levels">
+                                <a asp-area="RegManagement" asp-controller="PrefectureLevel" asp-action="Index">
+                                    <i class="fa fa-area-chart"></i>
+                                    <span>地级行政区</span>
+                                </a>
+                            </li>
+                            <li data-type="menu" data-name="edit-county-levels">
+                                <a asp-area="RegManagement" asp-controller="CountyLevel" asp-action="Index">
+                                    <i class="fa fa-area-chart"></i>
+                                    <span>县级行政区</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
-                    <li class="nav-item" data-name="basic-data">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
+                    <li data-type="parent-menu" data-name="basic-data">
+                        <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-database"></i>
                             <span>基础数据</span>
+                            <i class="fa fa-angle-right"></i>
                         </a>
-                    </li>
-                    <li class="nav-item" data-name="setting">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
-                            <i class="fa fa-cog"></i>
-                            <span>系统设置</span>
-                        </a>
-                    </li>
-                    <li class="nav-item" data-name="trash">
-                        <a class="nav-link" href="javascript:void(0);" onclick="show_child_menus(this);">
-                            <i class="fa fa-recycle"></i>
-                            <span>回&nbsp;收&nbsp;站</span>
-                        </a>
+                        <!--基础数据下的菜单-->
+                        <ul class="collapse">
+                            <li data-type="menu" data-name="edit-object-type-categories">
+                                <a asp-area="BaseManagement" asp-controller="ObjectTypeCategory" asp-action="Index">
+                                    <span>基础类型分类</span>
+                                </a>
+                            </li>
+                            <li data-type="menu" data-name="edit-object-types">
+                                <a asp-area="BaseManagement" asp-controller="ObjectTypeCategory" asp-action="ObjectTypes">
+                                    <span>基础类型管理</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </div>
             <!--内容-->
-            <div class="col-md-10 p-0 h-100">
-                <!--二级菜单-->
-                <nav class="navbar navbar-expand-lg" id="nav-child-menus">
-                    <!--车主下的二级菜单-->
-                    <ul class="navbar-nav d-none" data-name="vehicle-owner">
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">预约记录</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">营业日报</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">产值汇总</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">项目分析</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">车主评价</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--会员下的二级菜单-->
-                    <ul class="navbar-nav d-none" data-name="member-management">
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">会员列表</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="view-customers">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">全部客户</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">群发消息</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">生日提醒</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">售后提醒</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">电话回访</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">客户导入</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--库存下的二级菜单-->
-                    <ul class="navbar-nav d-none" data-name="inventory-management">
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">配件待出</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">入库管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">出库管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">出库查询</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="edit-parts">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">配件库</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="edit-warehouses">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">库房设置</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="check-parts">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">库存盘点</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="edit-part-suppliers">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">配件商</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--员工管理下的二级菜单-->
-                    <ul class="navbar-nav d-none" data-name="emp-management">
-                        <li class="nav-item d-none" data-name="edit-departments">
-                            <a class="nav-link parallelogram" asp-area="EmpManagement" asp-controller="Department" asp-action="Index">
-                                <span class="text">部门管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-jobs">
-                            <a class="nav-link parallelogram" asp-area="EmpManagement" asp-controller="Job" asp-action="Index">
-                                <span class="text">职位管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-employees">
-                            <a class="nav-link parallelogram" asp-area="EmpManagement" asp-controller="Employee" asp-action="Index">
-                                <span class="text">员工管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">考勤管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">请假条</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">奖惩记录</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">员工绩效</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">员工提成</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">工资报表</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">员工毛利贡献</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--区域管理下的二级菜单-->
-                    <ul class="navbar-nav d-none" data-name="reg-management">
-                        <li class="nav-item d-none" data-name="edit-province-levels">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="ProvinceLevel" asp-action="Index">
-                                <span class="text">省级行政区</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-prefecture-levels">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="PrefectureLevel" asp-action="Index">
-                                <span class="text">地级行政区</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-county-levels">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="CountyLevel" asp-action="Index">
-                                <span class="text">县级行政区</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--基础数据下的菜单-->
-                    <ul class="navbar-nav d-none" data-name="basic-data">
-                        <li class="nav-item d-none" data-name="edit-object-type-categories">
-                            <a class="nav-link parallelogram" asp-area="BaseManagement" asp-controller="ObjectTypeCategory" asp-action="Index">
-                                <span class="text">基础类型分类</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-object-types">
-                            <a class="nav-link parallelogram" asp-area="BaseManagement" asp-controller="ObjectTypeCategory" asp-action="ObjectTypes">
-                                <span class="text">基础类型管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="edit-provinces">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="Province" asp-action="Index">
-                                <span class="text">省份管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="edit-cities">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="Province" asp-action="City">
-                                <span class="text">城市管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="search-cities">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="City" asp-action="Index">
-                                <span class="text">城市查询</span>
-                            </a>
-                        </li>
-                        <li class="nav-item" data-name="edit-counties">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="City" asp-action="County">
-                                <span class="text">区县管理</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--设置下的二级菜单-->
-                    <ul class="navbar-nav d-none" data-name="setting">
-                        <li class="nav-item d-none" data-name="edit-roles">
-                            <a class="nav-link parallelogram" asp-area="SysManagement" asp-controller="Role" asp-action="Index">
-                                <span class="text">角色管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-role-rights">
-                            <a class="nav-link parallelogram" asp-area="SysManagement" asp-controller="Role" asp-action="Right">
-                                <span class="text">角色授权</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-users">
-                            <a class="nav-link parallelogram" asp-area="SysManagement" asp-controller="User" asp-action="Index">
-                                <span class="text">用户管理</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-parameter-categories">
-                            <a class="nav-link parallelogram" asp-area="CfgManagement" asp-controller="ParameterCategory" asp-action="Index">
-                                <span class="text">参数分类</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="edit-parameters">
-                            <a class="nav-link parallelogram" asp-area="CfgManagement" asp-controller="ParameterCategory" asp-action="Parameters">
-                                <span class="text">配置参数</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="search-parameters">
-                            <a class="nav-link parallelogram" asp-area="CfgManagement" asp-controller="Parameter" asp-action="Index">
-                                <span class="text">查询参数</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--回收站下的二级菜单-->
-                    <ul class="navbar-nav d-none" data-name="trash">
-                        <li class="nav-item" data-name="recycle-object-types">
-                            <a class="nav-link parallelogram" asp-area="Basic" asp-controller="ObjectTypeCategory" asp-action="RecycleObjectTypes">
-                                <span class="text">基础类型</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="recycle-provinces">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="Province" asp-action="Trash">
-                                <span class="text">回收省份</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="recycle-cities">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="City" asp-action="Trash">
-                                <span class="text">回收城市</span>
-                            </a>
-                        </li>
-                        <li class="nav-item d-none" data-name="recycle-counties">
-                            <a class="nav-link parallelogram" asp-area="RegManagement" asp-controller="City" asp-action="CountyTrash">
-                                <span class="text">回收区县</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link parallelogram" href="javascript:void(0);">
-                                <span class="text">车主列表</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+            <div class="col-md-10">
                 <!--主页内容展示-->
-                <div id="main">
+                <div id="div-main">
                     <!--导航-->
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
@@ -535,19 +515,19 @@
                         @RenderBody()
                     </div>
                     <!--modal-content容器0-->
-                    <div class="modal-content" data-name="modal-content-0" style="display:none;">
+                    <div class="modal-content d-none" data-name="modal-content-0" data-prev="main">
                         <div class="modal-header"></div>
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </div>
                     <!--modal-content容器1-->
-                    <div class="modal-content" data-name="modal-content-1" style="display:none;">
+                    <div class="modal-content d-none" data-name="modal-content-1" data-prev="modal-content-0">
                         <div class="modal-header"></div>
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </div>
                     <!--modal-content容器2-->
-                    <div class="modal-content" data-name="modal-content-2" style="display:none;">
+                    <div class="modal-content d-none" data-name="modal-content-2" data-prev="modal-content-1">
                         <div class="modal-header"></div>
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
@@ -555,7 +535,7 @@
                 </div>
                 <!--页面尾部-->
                 <footer>
-                    <i class="text-muted">南京XXX信息技术有限公司</i>
+                    <p class="text-center text-muted copyright">南京XXX信息技术有限公司</p>
                 </footer>
             </div>
         </div>
@@ -577,7 +557,7 @@
             //选中当前菜单
             select_menu();
             //显示当前登录角色下所有授权的菜单
-            show_login_role_menus();
+            //show_login_role_menus();
         </script>
     </body>
 </html>

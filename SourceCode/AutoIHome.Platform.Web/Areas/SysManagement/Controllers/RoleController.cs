@@ -85,7 +85,8 @@ namespace AutoIHome.Platform.Web.Areas.SysManagement.Controllers
         /// </summary>
         /// <returns>角色管理</returns>
         [ViewCheckLoginFilter()]
-        [Module("setting")]
+        [Module("basic-management")]
+        [ParentMenu("right-management")]
         [Menu("edit-roles")]
         public ViewResult Index()
         {
@@ -101,7 +102,8 @@ namespace AutoIHome.Platform.Web.Areas.SysManagement.Controllers
         /// </summary>
         /// <returns>角色授权</returns>
         [ViewCheckLoginFilter()]
-        [Module("setting")]
+        [Module("basic-management")]
+        [ParentMenu("right-management")]
         [Menu("edit-role-rights")]
         public ViewResult Right()
         {

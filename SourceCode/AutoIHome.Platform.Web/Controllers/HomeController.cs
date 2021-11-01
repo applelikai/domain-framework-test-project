@@ -1,4 +1,5 @@
-﻿using AutoIHome.Core.Domain.Entities.SysManagement;
+﻿using AutoIHome.Core.Domain.Entities.EmpManagement;
+using AutoIHome.Core.Domain.Entities.SysManagement;
 using AutoIHome.Core.Domain.Models.SysManagement;
 using AutoIHome.Core.Domain.Services.SysManagement;
 using AutoIHome.Infrastructure;
@@ -53,7 +54,15 @@ namespace AutoIHome.Platform.Web.Controllers
                 return base.View(loginUser);
             }
             //获取用户
-            User user = loginUser.GetUser();
+            //User user = loginUser.GetUser();
+            User user = new User()
+            {
+                UserId = GuidHelper.NewOrdered().ToString(),
+                UserName = loginUser.UserName,
+                Employee = new Employee(),
+                Password = Md5Helper.GetMd5(loginUser.Password),
+                RoleId = GuidHelper.NewOrdered().ToString()
+            };
             if (user == null)
             {
                 base.ViewData["ErrorMessage"] = $"用户({loginUser.UserName})不存在";
@@ -67,7 +76,7 @@ namespace AutoIHome.Platform.Web.Controllers
             }
             //记录账户信息
             base.Response.Cookies.Append("UserId", user.UserId);
-            base.Response.Cookies.Append("EmployeeNo", user.EmployeeNo);
+            base.Response.Cookies.Append("EmployeeNo", user.EmployeeNo ?? string.Empty);
             base.Response.Cookies.Append("UserName", HttpUtility.UrlEncode(user.Employee.EmployeeName ?? user.UserName));
             base.Response.Cookies.Append("RoleId", user.RoleId);
             //通过检查后跳转到主页

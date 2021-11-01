@@ -15,12 +15,12 @@
         //分页查询角色列表
         function search_roles(pageIndex, pageSize) {
             //创建Table分页加载对象
-            let oTableLoader = new PageTableLoader('#main > div[data-name="main"] div[data-name="roles"]', 4);
+            let oTableLoader = new PageTableLoader('#div-main > div[data-name="main"] div[data-name="roles"]', 4);
             //指定查询url
             oTableLoader.url = get_url_for_show_roles();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+                searcher: get_form_json('#div-main > div[data-name="main"] form[role="search"]'),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_roles',

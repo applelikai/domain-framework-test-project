@@ -42,7 +42,7 @@
                 let tree = layui.tree;
                 //渲染
                 tree.render({
-                    elem: document.querySelector('#main > div[data-name="main"] div[data-name="menus"]'),
+                    elem: document.querySelector('#div-main > div[data-name="main"] div[data-name="menus"]'),
                     data: get_module_menus(),
                     id: 'tree-menus',
                     showCheckbox: true
@@ -70,12 +70,12 @@
         //分页查询角色列表
         function search_roles(pageIndex, pageSize) {
             //创建Table分页加载对象
-            let oTableLoader = new PageTableLoader('#main > div[data-name="main"] div[data-name="roles"]', 4);
+            let oTableLoader = new PageTableLoader('#div-main > div[data-name="main"] div[data-name="roles"]', 4);
             //指定查询url
             oTableLoader.url = get_url_for_show_roles();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+                searcher: $('#div-main > div[data-name="main"] form[role="search"]').serializeObject(),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_roles',
@@ -105,7 +105,7 @@
         //加载当前角色信息
         function load_role(roleId, roleName) {
             //获取表单
-            let form = document.querySelector('#main > div[data-name="main"] form[data-name="edit-right"]');
+            let form = document.querySelector('#div-main > div[data-name="main"] form[data-name="edit-right"]');
             //加载当前角色
             form.querySelector('input[name="RoleId"]').value = roleId;
             form.querySelector('input[name="RoleName"]').value = roleName;
@@ -146,7 +146,7 @@
         //为当前角色授予菜单访问权限
         function set_role_menus() {
             //获取角色id
-            let sRoleId = document.querySelector('#main > div[data-name="main"] form[data-name="edit-right"] input[name="RoleId"]').value;
+            let sRoleId = document.querySelector('#div-main > div[data-name="main"] form[data-name="edit-right"] input[name="RoleId"]').value;
             //创建数据提交对象
             let oSubmitter = new DataSubmitter('确定授予当前角色以下菜单的访问权限吗?');
             //指定提交地址

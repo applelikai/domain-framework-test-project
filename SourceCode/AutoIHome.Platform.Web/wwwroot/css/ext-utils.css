@@ -8,9 +8,10 @@ a {
 }
 /*平行四边形*/
 .parallelogram{
+    padding: 4px 8px;
     transform: skewX(-30deg);
 }
-.parallelogram > .text{
+.parallelogram > span{
     display: block;
     transform: skew(30deg);
 }
@@ -37,4 +38,8 @@ a {
 }
 .overflow-scroll-y{
     overflow-y: scroll;
+}
+/*版权样式*/
+.copyright {
+    font-size: 13px;
 }
