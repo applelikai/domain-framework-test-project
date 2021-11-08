@@ -105,6 +105,27 @@ function get_loading_html() {
     //return '<i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop" style="font-size:30px;"></i>';
 }
 
+//加载表单日期控件列表
+function load_form_datepickers(form) {
+    //加载日期选择
+    layui.use('laydate', function () {
+        //获取laydate控件
+        let laydate = layui.laydate;
+        //遍历加载日期控件
+        form.querySelectorAll('input[data-role="datepicker"]').forEach(function (input) {
+            laydate.render({
+                elem: input
+            });
+        });
+        //遍历加载日期时间控件
+        form.querySelectorAll('input[data-role="datetimepicker"]').forEach(function (input) {
+            laydate.render({
+                elem: input,
+                type: 'datetime'
+            });
+        });
+    });
+}
 //清空表单数据
 function clean_form_data(form) {
     //遍历所有的input并清空

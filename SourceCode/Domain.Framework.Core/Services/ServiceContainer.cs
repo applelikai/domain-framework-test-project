@@ -15,30 +15,42 @@ namespace Domain.Framework.Core.Services
         /// </summary>
         private static object _locker;
         /// <summary>
-        /// 工厂容器
+        /// 工厂获取对象
         /// </summary>
-        private static FactoryContainerBase _factoryContainer;
+        private static IFactoryGetter _factoryGetter;
         /// <summary>
         /// 业务对象字典
         /// </summary>
         private static IDictionary<string, dynamic> _services;
 
         /// <summary>
-        /// 获取创建业务实现对象的工厂
+        /// 获取业务对象
         /// </summary>
-        /// <param name="serviceBaseType">业务基类类型</param>
-        /// <returns>创建业务实现对象的工厂</returns>
-        private static IServiceFactory GetFactory(Type serviceBaseType)
+        /// <typeparam name="TService">业务对象类型</typeparam>
+        /// <param name="key">业务对象对应的key</param>
+        /// <param name="getFactory">创建业务对象工厂的函数</param>
+        /// <returns>业务对象</returns>
+        private static TService Get<TService>(string key, Func<IServiceFactory> getFactory)
         {
-            //获取第三方的技术名称
-            string extensionSkillName = _factoryContainer.GetExtensionSkillName(serviceBaseType);
-            //若当前业务类型指定为第三方技术的业务类型,则直接获取创建第三方业务对象的工厂
-            if (!string.IsNullOrEmpty(extensionSkillName))
-                return _factoryContainer.GetExtensionServiceFactory(extensionSkillName);
-            //获取程序集名称
-            string assemblyName = serviceBaseType.Assembly.GetName().Name;
-            //获取当前程序集名称对应的业务对象创建工厂
-            return _factoryContainer.GetServiceFactory(assemblyName);
+            //开始获取业务对象
+            Start:
+            //若字典中存在当前Service对象,直接获取
+            if (_services.ContainsKey(key))
+                return _services[key];
+            //进入临界区(只允许一个线程进入)
+            lock (_locker)
+            {
+                //若字典中不存在当前Service对象
+                if (!_services.ContainsKey(key))
+                {
+                    //获取创建业务对象的工厂
+                    IServiceFactory factory = getFactory();
+                    //创建并注册当前类型的业务对象
+                    _services.Add(key, factory.Create<TService>());
+                }
+            }
+            //回到Start
+            goto Start;
         }
 
         /// <summary>
@@ -48,7 +60,7 @@ namespace Domain.Framework.Core.Services
         {
             //初始化
             _locker = new object();
-            _factoryContainer = ImplementContainer.Get<FactoryContainerBase>();
+            _factoryGetter = ImplementContainer.Get<IFactoryGetter>();
             _services = new Dictionary<string, dynamic>();
         }
         /// <summary>
@@ -60,25 +72,35 @@ namespace Domain.Framework.Core.Services
         {
             //获取业务基类类型
             Type serviceBaseType = typeof(TService);
-            //开始获取业务对象
-            Start:
-            //若字典中存在当前Service对象,直接获取
-            if (_services.ContainsKey(serviceBaseType.FullName))
-                return _services[serviceBaseType.FullName];
-            //进入临界区(只允许一个线程进入)
-            lock (_locker)
+            //获取创建业务对象工厂的函数
+            Func<IServiceFactory> getFactory = delegate ()
             {
-                //若字典中不存在当前Service对象
-                if (!_services.ContainsKey(serviceBaseType.FullName))
-                {
-                    //获取创建业务对象的工厂
-                    IServiceFactory factory = ServiceContainer.GetFactory(serviceBaseType);
-                    //创建并注册当前类型的业务对象
-                    _services.Add(serviceBaseType.FullName, factory.Create<TService>());
-                }
-            }
-            //回到Start
-            goto Start;
+                //获取创建业务对象的工厂
+                return _factoryGetter.GetServiceFactory(serviceBaseType);
+            };
+            //获取业务对象
+            return ServiceContainer.Get<TService>(serviceBaseType.FullName, getFactory);
+        }
+        /// <summary>
+        /// 获取当前对象id所在领域下的业务处理对象
+        /// </summary>
+        /// <typeparam name="TService">业务对象类型</typeparam>
+        /// <param name="objectId">对象id</param>
+        /// <returns>业务处理对象</returns>
+        public static TService Get<TService>(string objectId)
+        {
+            //获取业务基类类型
+            Type serviceBaseType = typeof(TService);
+            //获取业务对象对应的key
+            string key = $"{objectId}:{serviceBaseType.FullName}";
+            //获取创建业务对象工厂的函数
+            Func<IServiceFactory> getFactory = delegate ()
+            {
+                //获取创建业务对象的工厂
+                return _factoryGetter.GetServiceFactory(serviceBaseType, objectId);
+            };
+            //获取业务对象
+            return ServiceContainer.Get<TService>(key, getFactory);
         }
     }
 }

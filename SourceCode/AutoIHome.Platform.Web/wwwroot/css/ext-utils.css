@@ -18,19 +18,18 @@ a {
 /*固定宽度样式*/
 .w-fixed-100{
     width: 100px;
-    text-overflow: ellipsis;
 }
 .w-fixed-150 {
     width: 150px;
-    text-overflow: ellipsis;
 }
 .w-fixed-200 {
     width: 200px;
-    text-overflow: ellipsis;
 }
 .w-fixed-250 {
     width: 250px;
-    text-overflow: ellipsis;
+}
+.w-fixed-300 {
+    width: 300px;
 }
 /*滚动条样式*/
 .overflow-scroll-x{

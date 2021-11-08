@@ -1,5 +1,4 @@
-using AutoIHome.Infrastructure.Framework.CloudEntity;
-using AutoIHome.Infrastructure.Framework.Factories;
+using AutoIHome.Infrastructure.Framework.Containers;
 using Bootstrap.AspNetCore.TagHelpers;
 using Domain.Framework.Core.Factories;
 using Domain.Framework.Implementation;
@@ -72,8 +71,7 @@ namespace AutoIHome.Platform.Web
                 .AddJsonFile("appsettings.json");
             IConfiguration configuration = builder.Build();
             //¡Ï”ÚøÚº‹“¿¿µ◊¢»Î≈‰÷√
-            DbContainerSet dbContainerSet = new DbContainerSet(configuration);
-            ImplementContainer.Add<FactoryContainerBase>(new FactoryContainer(dbContainerSet));
+            ImplementContainer.Add<IFactoryGetter>(new FactoryGetter(configuration));
         }
     }
 }

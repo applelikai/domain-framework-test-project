@@ -11,27 +11,6 @@ function __loading(divContainer) {
     //加载modal-footer
     divContainer.querySelector('.modal-footer').innerHTML = get_loading_html();
 }
-//加载日期控件列表
-function __load_datepickers(form) {
-    //加载日期选择
-    layui.use('laydate', function () {
-        //获取laydate控件
-        let laydate = layui.laydate;
-        //遍历加载日期控件
-        form.querySelectorAll('input[data-role="datepicker"]').forEach(function (input) {
-            laydate.render({
-                elem: input
-            });
-        });
-        //遍历加载日期时间控件
-        form.querySelectorAll('input[data-role="datetimepicker"]').forEach(function (input) {
-            laydate.render({
-                elem: input,
-                type: 'datetime'
-            });
-        });
-    });
-}
 
 //modal-content容器类
 function ModalContentContainer(parent, name) {
@@ -76,7 +55,7 @@ function ModalContentContainer(parent, name) {
     //展开当前容器
     this.show = function () {
         //遍历父容器下的所有子容器
-        for (let htmlElement of document.querySelector(parent).children) {
+        for (let htmlElement of get_html_element(parent).children) {
             //若当前子容器不为div，则跳过
             if (htmlElement.nodeName !== 'DIV')
                 continue;
@@ -136,12 +115,12 @@ function ModalContentFormContainer(parent, name) {
     //设置表单的函数
     this.set_form = function (form) {
         //加载表单日期时间控件
-        __load_datepickers(form);
+        load_form_datepickers(form);
     };
     //展开当前容器
     this.show = function () {
         //遍历父容器下的所有子容器
-        for (let htmlElement of document.querySelector(parent).children) {
+        for (let htmlElement of get_html_element(parent).children) {
             //若当前子容器不为div，则跳过
             if (htmlElement.nodeName !== 'DIV')
                 continue;
@@ -214,7 +193,7 @@ function ModalDialogFormContainer(sContainerId) {
     //设置表单的函数
     this.set_form = function (form) {
         //加载表单日期时间控件
-        __load_datepickers(form);
+        load_form_datepickers(form);
     };
     //弹出当前容器
     this.show = function () {

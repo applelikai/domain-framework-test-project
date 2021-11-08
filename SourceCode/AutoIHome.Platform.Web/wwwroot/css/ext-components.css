@@ -18,7 +18,7 @@
     width: auto;
     height: 14%;
     margin: 0px;
-    padding: 0px 16px 0px 0px;
+    padding: 0px 8px 0px 0px;
 }
 /*分页列表的主体*/
 .paged-list > div > main {
@@ -27,6 +27,10 @@
     overflow-y: scroll;
     margin: 0px;
     padding: 0px;
+}
+/*分页列表的主体滚动条样式*/
+.paged-list > div > main::-webkit-scrollbar {
+    width: 8px;
 }
 /*分页列表的页尾*/
 .paged-list > footer {
@@ -64,6 +68,11 @@
 .table-data tbody tr:hover{
     background-color: #f8f9fa;
     color: #02b8d6;
+}
+.table-data tbody tr td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .table-data tbody tr td .fa{
     font-size: 23px;

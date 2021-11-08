@@ -10,12 +10,12 @@
 将Repository和Service对象存储在容器中
 按程序集进行分库，每个程序集下的Entity对应的所有表都在当前程序集对应的数据库中
 及每个程序集对应一个连接字符串，对应一个数据库，作为单独的领域</Description>
-    <Version>1.0.1</Version>
-    <PackageTags>Domain Framework</PackageTags>
+    <Version>1.0.4</Version>
+    <PackageTags>domain;framework</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>F:\library.source-codes\domain-framework-test-project\SourceCode\Domain.Framework.Core\Domain.Framework.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\Domain.Framework.Core.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
