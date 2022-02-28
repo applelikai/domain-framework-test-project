@@ -16,6 +16,10 @@ namespace AutoIHome.Core.Domain.Entities.SysManagement
         /// </summary>
         public string MenuName { get; set; }
         /// <summary>
+        /// 菜单类型
+        /// </summary>
+        public string MenuType { get; set; }
+        /// <summary>
         /// 角色id
         /// </summary>
         public string RoleId { get; set; }

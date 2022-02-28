@@ -15,4 +15,5 @@ logs/
 
 #忽略的具体文件夹目录
 /SourceCode/.vs
+/SourceCode/.vscode
 /SourceCode/AutoIHome.Platform.Web/wwwroot/Temp

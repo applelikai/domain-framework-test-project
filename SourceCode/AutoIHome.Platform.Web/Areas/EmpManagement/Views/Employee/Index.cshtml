@@ -19,29 +19,29 @@
 
         //分页查询员工列表
         function search_employees(pageIndex, pageSize) {
-            //创建Table分页加载对象
-            let oTableLoader = new PageTableLoader('#main > div[data-name="main"] div[data-name="employees"]', 9);
+            //创建分页列表加载对象
+            let oPagedListLoader = new PagedListLoader('#div-main > div[data-name="main"] div[data-name="employees"]');
             //指定查询url
-            oTableLoader.url = get_url_for_show_employees();
+            oPagedListLoader.url = get_url_for_show_employees();
             //指定查询参数
-            oTableLoader.data = {
-                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+            oPagedListLoader.data = {
+                searcher: get_form_json('#div-main > div[data-name="main"] form[role="search"]'),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_employees',
                 linksViewName: get_links_view_name()
             };
             //加载数据
-            oTableLoader.load();
+            oPagedListLoader.load();
         }
         //显示员工详情
-        function show_employee(employeeNo) {
+        function show_employee(employeeId) {
             //创建容器对象
-            let oContainer = new ModalContentContainer('#main', 'modal-content-0');
+            let oContainer = new ModalContentContainer('#div-main', 'modal-content-0');
             //指定url
             oContainer.url = get_url_for_show_employee();
             //指定参数
-            oContainer.data = { employeeNo: employeeNo };
+            oContainer.data = { employeeId: employeeId };
             //显示当前容器
             oContainer.show();
         }
@@ -82,12 +82,12 @@
             //加载可选部门列表
             load_search_departments(form.querySelector('input[name="DepartmentName"]'));
             //加载可选职位列表
-            load_search_jobs(form.querySelector('input[name="JobName"]'));
+            load_search_jobs(form);
         }
         //显示新建员工
         function show_new_employee() {
             //创建容器对象
-            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            let oContainer = new ModalContentFormContainer('#div-main', 'modal-content-0');
             //指定url
             oContainer.url = get_url_for_show_view();
             //指定参数
@@ -101,13 +101,13 @@
             oContainer.show();
         }
         //显示编辑员工
-        function show_edit_employee(employeeNo) {
+        function show_edit_employee(employeeId) {
             //创建容器对象
-            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            let oContainer = new ModalContentFormContainer('#div-main', 'modal-content-0');
             //指定url
             oContainer.url = get_url_for_edit_employee();
             //指定参数
-            oContainer.data = { employeeNo: employeeNo };
+            oContainer.data = { employeeId: employeeId };
             //指定初始化表单的函数
             oContainer.set_form = set_edit_employee;
             //显示当前容器
@@ -118,7 +118,7 @@
             //获取跳转的url地址
             let sUrl = get_url_for_export_employees()
                 + '?'
-                + $('#main > div[data-name="main"] form[role="search"]').serialize();
+                + $('#div-main > div[data-name="main"] form[role="search"]').serialize();
             //跳转
             window.location.href = sUrl;
         }
@@ -141,7 +141,7 @@
                 //重新查询
                 search_employees(1);
                 //返回上一个界面
-                go_back($(form).parents('.modal-content'));
+                go_back($(form).parents('.modal-content').get(0));
             };
             //执行提交
             oSubmitter.submit();
@@ -157,7 +157,7 @@
                 //重新查询
                 search_employees(1);
                 //回到上一个界面
-                go_back($(form).parents('.modal-content'));
+                go_back($(form).parents('.modal-content').get(0));
             };
             //执行提交
             oSubmitter.submit();
@@ -185,6 +185,7 @@
                 console.log(textStatus);
                 //新建悬停框
                 new bootstrap.Popover(element, {
+                    title: '<i class="fa fa-cogs"></i> 可选部门列表',
                     container: document.body,
                     content: function () {
                         let divContainer = document.createElement('div');
@@ -193,7 +194,7 @@
                         return divContainer;
                     },
                     html: true,
-                    placement: 'top'
+                    placement: 'left'
                 });
             }, 'html');
         }
@@ -205,7 +206,7 @@
             oTableLoader.url = get_url_for_show_select_departments();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#div-select-departments > form').serializeObject(),
+                searcher: get_form_json('#div-select-departments > form'),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_select_departments',
@@ -215,71 +216,84 @@
             oTableLoader.load();
         }
         //选择当前部门
-        function select_department(departmentNo, departmentName) {
+        function select_department(departmentId, departmentName) {
             //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            let form = document.querySelector('#div-main > div[data-name="modal-content-0"] form');
             //指定部门信息
-            form.querySelector('input[name="DepartmentNo"]').value = departmentNo;
+            form.querySelector('input[name="DepartmentId"]').value = departmentId;
             form.querySelector('input[name="DepartmentName"]').value = departmentName;
             //关闭当前悬停框
             let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="DepartmentName"]'));
             oPopover.hide();
         }
-        //关闭并取消选择部门列表
-        function close_search_select_departments() {
-            //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+        //清空选择部门并关闭选择框
+        function clean_select_department(form) {
             //清空部门信息
-            form.querySelector('input[name="DepartmentNo"]').value = '';
+            form.querySelector('input[name="DepartmentId"]').value = '';
             form.querySelector('input[name="DepartmentName"]').value = '';
+            //清空职位信息
+            form.querySelector('input[name="JobId"]').value = '';
+            form.querySelector('input[name="JobName"]').value = '';
             //关闭当前悬停框
-            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="DepartmentName"]'));
-            oPopover.hide();
+            bootstrap.Popover.getInstance(form.querySelector('input[name="DepartmentName"]')).hide();
         }
     </script>
     <!--点击选择职位-->
     <script type="text/javascript">
-        //获取显示查询可选职位列表的url
-        function get_url_for_show_search_jobs() { return '@Url.Action("ShowListSearchJobs", "Job")'; }
         //获取显示可选职位列表的url
         function get_url_for_show_select_jobs() { return '@Url.Action("ShowListSelectJobs", "Job")'; }
 
         //加载查询可选职位列表
-        function load_search_jobs(element) {
-            //获取数据
-            let jData = {
-                pageIndex: 1,
-                pageSize: 5,
-                functionName: 'search_select_jobs',
-                selectFunctionName: 'select_job'
-            };
-            //加载查询可选职位列表
-            $.post(get_url_for_show_search_jobs(), jData, function (data, textStatus, jqXHR) {
-                //打印log
-                console.log(textStatus);
-                //新建悬停框
-                new bootstrap.Popover(element, {
-                    container: document.body,
-                    content: function () {
-                        let divContainer = document.createElement('div');
-                        divContainer.innerHTML = data;
-                        divContainer.id = 'div-select-jobs';
-                        return divContainer;
+        function load_search_jobs(form) {
+            //获取输入框
+            let inputJobName = form.querySelector('input[name="JobName"]');
+            //加载悬停框对象
+            bootstrap.Popover.getOrCreateInstance(inputJobName, {
+                title: '<i class="fa fa-cogs"></i> 可选职位列表',
+                container: document.body,
+                content: function () {
+                    let divContainer = document.createElement('div');
+                    divContainer.id = 'div-select-jobs';
+                    return divContainer;
+                },
+                html: true,
+                placement: 'left'
+            });
+            //添加监听时间，悬停框显示时加载可选职位列表
+            inputJobName.addEventListener('shown.bs.popover', function () {
+                //创建html加载器
+                let oHtmlLoader = new HtmlLoader(document.getElementById('div-select-jobs'));
+                //指定查询url
+                oHtmlLoader.url = get_url_for_show_select_jobs();
+                //指定查询参数
+                oHtmlLoader.data = {
+                    searcher: {
+                        DepartmentId: form.querySelector('input[name="DepartmentId"]').value,
+                        JobName: form.querySelector('input[name="JobName"]').value
                     },
-                    html: true,
-                    placement: 'top'
-                });
-            }, 'html');
+                    pageIndex: 1,
+                    pageSize: 5,
+                    functionName: 'search_select_jobs',
+                    selectFunctionName: 'select_job'
+                };
+                //加载数据
+                oHtmlLoader.load();
+            });
         }
         //分页查询可选职位列表
         function search_select_jobs(pageIndex, pageSize) {
+            //获取表单
+            let form = document.querySelector('#div-main > div[data-name="modal-content-0"] form');
             //创建Table分页加载对象
-            let oTableLoader = new PageTableLoader('#div-select-jobs > main', 3);
+            let oTableLoader = new PageTableLoader(document.getElementById('div-select-jobs'), 4);
             //指定查询url
             oTableLoader.url = get_url_for_show_select_jobs();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#div-select-jobs > form').serializeObject(),
+                searcher: {
+                    DepartmentId: form.querySelector('input[name="DepartmentId"]').value,
+                    JobName: form.querySelector('input[name="JobName"]').value
+                },
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_select_jobs',
@@ -291,7 +305,7 @@
         //选择当前职位
         function select_job(jobId, jobName) {
             //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            let form = document.querySelector('#div-main > div[data-name="modal-content-0"] form');
             //指定职位信息
             form.querySelector('input[name="JobId"]').value = jobId;
             form.querySelector('input[name="JobName"]').value = jobName;
@@ -299,16 +313,13 @@
             let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="JobName"]'));
             oPopover.hide();
         }
-        //关闭并取消选择职位列表
-        function close_search_select_jobs() {
-            //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+        //清空选择职位并关闭选择框
+        function clean_select_job(form) {
             //清空职位信息
             form.querySelector('input[name="JobId"]').value = '';
             form.querySelector('input[name="JobName"]').value = '';
             //关闭当前悬停框
-            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="JobName"]'));
-            oPopover.hide();
+            bootstrap.Popover.getInstance(form.querySelector('input[name="JobName"]')).hide();
         }
     </script>
     <!--初始化-->
@@ -331,15 +342,15 @@
 <form class="bg-white pt-3 pb-3" role="search">
     <div class="row mb-2">
         <div class="col-md-4 row">
-            <label class="col-md-4 col-form-label text-end">员工编号:</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="EmployeeNo" />
-            </div>
-        </div>
-        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">员工姓名:</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" name="EmployeeName" />
+            </div>
+        </div>
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">手机号码:</label>
+            <div class="col-md-8">
+                <input class="form-control" type="text" name="PhoneNumber" />
             </div>
         </div>
     </div>
@@ -374,31 +385,40 @@
     <input type="hidden" name="IsDeleted" value="@base.ViewData["IsDeleted"]" />
 </form>
 <!--数据展示-->
-<div class="bg-white w-100 mt-2 p-0" data-name="employees">
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>
-                    <input type="checkbox" />
-                </th>
-                <th>员工编号</th>
-                <th>员工姓名</th>
-                <th>性别</th>
-                <th>年龄</th>
-                <th>部门</th>
-                <th>职位</th>
-                <th>录入时间</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-            <tr>
-                <td colspan="9">
-                    <input type="hidden" name="PageSize" value="10" />
-                    <input type="hidden" name="PageIndex" value="1" />
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+<div class="paged-list bg-white mt-2 h-75" data-name="employees">
+    <div>
+        <!--表头-->
+        <header style="width:1900px;">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="w-fixed-100">
+                            <input type="checkbox" />
+                        </th>
+                        <th class="w-fixed-150">员工姓名</th>
+                        <th class="w-fixed-100">性别</th>
+                        <th class="w-fixed-200">身份证号码</th>
+                        <th class="w-fixed-150">出生日期</th>
+                        <th class="w-fixed-100">年龄</th>
+                        <th class="w-fixed-150">部门</th>
+                        <th class="w-fixed-150">职位</th>
+                        <th class="w-fixed-150">手机号码</th>
+                        <th class="w-fixed-150">电子邮箱</th>
+                        <th class="w-fixed-150">入职日期</th>
+                        <th class="w-fixed-200">录入时间</th>
+                        <th class="w-fixed-150">操作</th>
+                    </tr>
+                </thead>
+            </table>
+        </header>
+        <!--主体:数据行列表-->
+        <main style="width:1900px;">
+        </main>
+    </div>
+    <!--页尾:分页-->
+    <footer>
+        <!--初始化隐藏变量-->
+        <input type="hidden" name="PageSize" value="20" />
+        <input type="hidden" name="PageIndex" value="1" />
+    </footer>
 </div>

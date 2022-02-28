@@ -72,7 +72,8 @@ namespace AutoIHome.Platform.Web.Areas.SysManagement.Controllers
         /// </summary>
         /// <returns>用户管理</returns>
         [ViewCheckLoginFilter()]
-        [Module("setting")]
+        [Module("basic-management")]
+        [ParentMenu("right-management")]
         [Menu("edit-users")]
         public ViewResult Index()
         {
@@ -96,7 +97,7 @@ namespace AutoIHome.Platform.Web.Areas.SysManagement.Controllers
             //获取用户
             User user = RepositoryContainer.Get<User>().Get(userId);
             user.Role = RepositoryContainer.Get<Role>().Get(user.RoleId);
-            user.Employee = RepositoryContainer.Get<Employee>().Get(user.EmployeeNo) ?? new Employee();
+            user.Employee = RepositoryContainer.Get<Employee>().Get(user.EmployeeId) ?? new Employee();
             //获取分部视图
             return base.PartialView("_EditUser", user);
         }
@@ -126,7 +127,7 @@ namespace AutoIHome.Platform.Web.Areas.SysManagement.Controllers
             //获取用户
             User user = RepositoryContainer.Get<User>().Get(userId);
             user.Role = RepositoryContainer.Get<Role>().Get(user.RoleId);
-            user.Employee = RepositoryContainer.Get<Employee>().Get(user.EmployeeNo) ?? new Employee();
+            user.Employee = RepositoryContainer.Get<Employee>().Get(user.EmployeeId) ?? new Employee();
             //获取分部视图
             return base.PartialView("_DetailUser", user);
         }

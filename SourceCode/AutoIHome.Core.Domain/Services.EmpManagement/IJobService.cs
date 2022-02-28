@@ -1,8 +1,7 @@
 ﻿using AutoIHome.Core.Domain.Entities.EmpManagement;
-using AutoIHome.Infrastructure.Models;
+using AutoIHome.Core.Domain.Models.EmpManagement;
 using AutoIHome.Infrastructure;
 using Domain.Framework.Core.Services;
-using System.Collections.Generic;
 
 namespace AutoIHome.Core.Domain.Services.EmpManagement
 {
@@ -12,19 +11,13 @@ namespace AutoIHome.Core.Domain.Services.EmpManagement
     public interface IJobService
     {
         /// <summary>
-        /// 获取职位列表
-        /// </summary>
-        /// <param name="searcher">名称项查询对象</param>
-        /// <returns>职位列表</returns>
-        IEnumerable<Job> GetJobs(INameSearcher searcher);
-        /// <summary>
         /// 分页获取职位列表
         /// </summary>
-        /// <param name="searcher">名称项查询对象</param>
+        /// <param name="searcher">职位列表查询对象</param>
         /// <param name="pageIndex">当前页</param>
         /// <param name="pageSize">每页元素数量</param>
         /// <returns>职位分页列表</returns>
-        IPagedList<Job> GetJobs(INameSearcher searcher, int pageIndex, int pageSize);
+        IPagedList<Job> GetJobs(IJobSearcher searcher, int pageIndex, int pageSize);
     }
     /// <summary>
     /// 职位业务扩展类
@@ -40,22 +33,13 @@ namespace AutoIHome.Core.Domain.Services.EmpManagement
         }
 
         /// <summary>
-        /// 获取职位列表
-        /// </summary>
-        /// <param name="searcher">名称项查询对象</param>
-        /// <returns>职位列表</returns>
-        public static IEnumerable<Job> GetJobs(this INameSearcher searcher)
-        {
-            return _Service.GetJobs(searcher);
-        }
-        /// <summary>
         /// 分页获取职位列表
         /// </summary>
-        /// <param name="searcher">名称项查询对象</param>
+        /// <param name="searcher">职位列表查询对象</param>
         /// <param name="pageIndex">当前页</param>
         /// <param name="pageSize">每页元素数量</param>
         /// <returns>职位分页列表</returns>
-        public static IPagedList<Job> GetJobs(this INameSearcher searcher, int pageIndex, int pageSize)
+        public static IPagedList<Job> GetJobs(this IJobSearcher searcher, int pageIndex, int pageSize)
         {
             return _Service.GetJobs(searcher, pageIndex, pageSize);
         }

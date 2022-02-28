@@ -5,11 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AutoIHome.AspNetCore.WebUi\AutoIHome.AspNetCore.WebUi.csproj" />
     <ProjectReference Include="..\AutoIHome.Core.Domain.CloudEntity\AutoIHome.Core.Domain.CloudEntity.csproj" />
     <ProjectReference Include="..\AutoIHome.Infrastructure.CloudEntity\AutoIHome.Infrastructure.CloudEntity.csproj" />
     <ProjectReference Include="..\Base.RegManagement.Domain.CloudEntity\Base.RegManagement.Domain.CloudEntity.csproj" />
     <ProjectReference Include="..\Bootstrap.AspNetCore.TagHelpers\Bootstrap.AspNetCore.TagHelpers.csproj" />
     <ProjectReference Include="..\Extension.OpenXml\Extension.OpenXml.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\lib\jquery-miniui\themes\gray\images\layout\" />
+    <Folder Include="wwwroot\lib\jquery-miniui\themes\gray\images\panel\" />
+    <Folder Include="wwwroot\lib\jquery-miniui\themes\gray\images\splitter\" />
+    <Folder Include="wwwroot\lib\jquery-miniui\themes\gray\images\tabs\" />
+    <Folder Include="wwwroot\lib\jquery-miniui\themes\gray\images\treegrid\" />
+    <Folder Include="wwwroot\lib\jquery-miniui\themes\pure\images\button\" />
   </ItemGroup>
 
 </Project>

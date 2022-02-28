@@ -1,9 +1,16 @@
-﻿@{
+﻿@model Department
+@{
     Layout = "_ModalDialogForm";
 }
 
 <!--新建职位表单-->
 <form action="javascript:void(0);" onsubmit="add_job(this);">
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">所属部门</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" value="@base.Model.DepartmentName" readonly />
+        </div>
+    </div>
     <div class="row mb-3">
         <label class="col-md-3 col-form-label text-end">职位名称</label>
         <div class="col-md-9">
@@ -19,4 +26,5 @@
     </div>
     <!--隐藏变量-->
     <input type="hidden" name="JobId" value="@GuidHelper.NewOrdered().ToString()" />
+    <input type="hidden" name="DepartmentId" value="@base.Model.DepartmentId" />
 </form>

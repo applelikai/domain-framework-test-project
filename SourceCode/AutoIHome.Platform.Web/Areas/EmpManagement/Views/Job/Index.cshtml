@@ -1,24 +1,33 @@
-﻿@section scripts{
+﻿@section style_libraries{
+    <link rel="stylesheet" href="~/lib/jquery-miniui/themes/default/miniui.css" />
+    <link rel="stylesheet" href="~/lib/jquery-miniui/themes/metro-blue/skin.css" />
+}
+@section script_libraries{
+    <script type="text/javascript" src="~/lib/jquery-miniui/miniui.js"></script>
+}
+@section scripts{
     <!--添加引用-->
     <script type="text/javascript" src="~/js/_references.js"></script>
     <!--查询展示-->
     <script type="text/javascript">
-        //获取展示分部视图的url
-        function get_url_for_show_view() { return '@Url.Action("ShowView")'; }
         //获取显示职位列表的url
         function get_url_for_show_jobs() { return '@Url.Action("ShowListPagedJobs")'; }
+        //获取显示职位详情的url
+        function get_url_for_show_job() { return '@Url.Action("ShowDetailJob")'; }
+        //获取新建职位的url
+        function get_url_for_new_job() { return '@Url.Action("ShowNewJob")'; }
         //获取编辑职位的url
         function get_url_for_edit_job() { return '@Url.Action("ShowEditJob")'; }
 
         //分页查询职位列表
         function search_jobs(pageIndex, pageSize) {
             //创建Table分页加载对象
-            let oTableLoader = new PageTableLoader('#main > div[data-name="main"] div[data-name="jobs"]', 4);
+            let oTableLoader = new PageTableLoader('#div-main > div[data-name="main"] div[data-name="jobs"]', 4);
             //指定查询url
             oTableLoader.url = get_url_for_show_jobs();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+                searcher: get_form_json('#div-main > div[data-name="main"] form[role="search"]'),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_jobs'
@@ -26,16 +35,26 @@
             //加载数据
             oTableLoader.load();
         }
+        //显示职位详情
+        function show_job(jobId) {
+            //创建容器对象
+            let oContainer = new ModalDialogContainer('div-modal-dialog-0');
+            //指定url
+            oContainer.url = get_url_for_show_job();
+            //指定参数
+            oContainer.data = { jobId: jobId };
+            //显示当前容器
+            oContainer.show();
+        }
         //显示新建职位
         function show_new_job() {
             //创建容器对象
             let oContainer = new ModalDialogFormContainer('div-modal-dialog-0');
             //指定url
-            oContainer.url = get_url_for_show_view();
+            oContainer.url = get_url_for_new_job();
             //指定参数
             oContainer.data = {
-                viewName: '_NewJob',
-                title: '新建职位'
+                departmentId: document.querySelector('#div-main > div[data-name="main"] form[role="search"] input[name="DepartmentId"]').value
             };
             //显示当前容器
             oContainer.show();
@@ -107,11 +126,51 @@
             oSubmitter.submit();
         }
     </script>
+    <!--部门-->
+    <script type="text/javascript">
+        //获取部门列表的url
+        function get_url_for_get_departments() { return '@Url.Action("GetDepartments", "Department")'; }
+
+        //加载部门列表树
+        function load_department_tree() {
+            //创建tree对象
+            let tree = new mini.Tree(document.querySelector('#div-main > div[data-name="main"] div[data-name="tree-departments"]'));
+            //指定选项
+            tree.set({
+                showTreeIcon: true,
+                resultAsTree: false,
+                textField: 'DepartmentName',
+                idField: 'DepartmentId',
+                parentField: 'ParentId',
+                onnodeselect: 'select_department'
+            });
+            //加载数据
+            tree.load(get_url_for_get_departments());
+        }
+        //选择当前部门
+        function select_department(event) {
+            //获取查询表单对象
+            let form = document.querySelector('#div-main > div[data-name="main"] form[role="search"]');
+            //指定所属部门信息
+            form.querySelector('input[name="DepartmentId"]').value = event.node.DepartmentId;
+            form.querySelector('input[name="DepartmentName"]').value = event.node.DepartmentName;
+            //启用查询表单按钮
+            form.querySelectorAll('button').forEach(function (button) {
+                button.disabled = false;
+            });
+            //重新查询
+            search_jobs(1);
+        }
+    </script>
     <!--初始化-->
     <script type="text/javascript">
         $(function () {
-            //默认查询第一页的职位列表
-            search_jobs(1);
+            //默认禁用查询表单按钮
+            document.querySelectorAll('#div-main > div[data-name="main"] form[role="search"] button').forEach(function (button) {
+                button.disabled = true;
+            });
+            //加载部门列表树
+            load_department_tree();
         })
     </script>
 }
@@ -123,45 +182,62 @@
     <li class="breadcrumb-item active" aria-current="page">@base.ViewData["Title"]</li>
 }
 
-<!--查询表单-->
-<form class="bg-white pt-3 pb-3" role="search">
-    <div class="row">
-        <div class="col-md-4 row">
-            <label class="col-md-4 col-form-label text-end">职位名称:</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="SearchName" />
+<div class="row h-100">
+    <!--部门菜单列表-->
+    <div class="col-md-3 div-panel-vertical">
+        <div data-name="tree-departments"></div>
+    </div>
+    <!--职位查询列表-->
+    <div class="col-md-9">
+        <!--查询表单-->
+        <form class="bg-white pt-3 pb-3" role="search">
+            <div class="row">
+                <div class="col-md-4 row">
+                    <label class="col-md-4 col-form-label text-end">所属部门:</label>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text" name="DepartmentName" readonly />
+                    </div>
+                </div>
+                <div class="col-md-4 row">
+                    <label class="col-md-4 col-form-label text-end">职位名称:</label>
+                    <div class="col-md-8">
+                        <input class="form-control" type="text" name="JobName" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <primary-button click="search_jobs(1);">
+                        <partial name="_ButtonTextSearch" />
+                    </primary-button>
+                    &nbsp;
+                    <primary-button click="show_new_job();">
+                        <partial name="_ButtonTextNew" />
+                    </primary-button>
+                </div>
             </div>
-        </div>
-        <div class="col-md-2">
-            <primary-button click="search_jobs(1);">
-                <partial name="_ButtonTextSearch" />
-            </primary-button>
-            &nbsp;
-            <primary-button click="show_new_job();">
-                <partial name="_ButtonTextNew" />
-            </primary-button>
+            <!--隐藏变量-->
+            <input type="hidden" name="DepartmentId" />
+        </form>
+        <!--数据展示-->
+        <div class="bg-white w-100 mt-2 p-0" data-name="jobs">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>所属部门</th>
+                        <th>职位名称</th>
+                        <th>录入时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <input type="hidden" name="PageSize" value="10" />
+                            <input type="hidden" name="PageIndex" value="1" />
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
-</form>
-<!--数据展示-->
-<div class="bg-white w-100 mt-2 p-0" data-name="jobs">
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>职位名称</th>
-                <th>备注</th>
-                <th>录入时间</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-            <tr>
-                <td colspan="4">
-                    <input type="hidden" name="PageSize" value="10" />
-                    <input type="hidden" name="PageIndex" value="1" />
-                </td>
-            </tr>
-        </tfoot>
-    </table>
 </div>

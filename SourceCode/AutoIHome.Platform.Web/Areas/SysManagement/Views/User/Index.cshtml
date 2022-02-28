@@ -17,12 +17,12 @@
         //分页查询用户列表
         function search_users(pageIndex, pageSize) {
             //创建Table分页加载对象
-            let oTableLoader = new PageTableLoader('#main > div[data-name="main"] div[data-name="users"]', 5);
+            let oTableLoader = new PageTableLoader('#div-main > div[data-name="main"] div[data-name="users"]', 5);
             //指定查询url
             oTableLoader.url = get_url_for_show_users();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#main > div[data-name="main"] form[role="search"]').serializeObject(),
+                searcher: get_form_json('#div-main > div[data-name="main"] form[role="search"]'),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_users',
@@ -34,7 +34,7 @@
         //显示用户详情
         function show_user(userId) {
             //创建容器对象
-            let oContainer = new ModalContentContainer('#main', 'modal-content-0');
+            let oContainer = new ModalDialogContainer('div-modal-dialog-0');
             //指定url
             oContainer.url = get_url_for_show_user();
             //指定参数
@@ -52,7 +52,7 @@
         //显示新建用户
         function show_new_user() {
             //创建容器对象
-            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            let oContainer = new ModalDialogFormContainer('div-modal-dialog-0');
             //指定url
             oContainer.url = get_url_for_show_view();
             //指定参数
@@ -68,7 +68,7 @@
         //显示编辑用户
         function show_edit_user(userId) {
             //创建容器对象
-            let oContainer = new ModalContentFormContainer('#main', 'modal-content-0');
+            let oContainer = new ModalDialogFormContainer('div-modal-dialog-0');
             //指定url
             oContainer.url = get_url_for_edit_user();
             //指定参数
@@ -99,7 +99,7 @@
                 //重新查询
                 search_users(1);
                 //关闭编辑用户表单
-                close_edit_user($(form).parents('.modal-content'));
+                close_dialog($(form).parents('.modal').get(0));
             };
             //执行提交
             oSubmitter.submit();
@@ -115,7 +115,7 @@
                 //重新查询
                 search_users();
                 //关闭编辑用户表单
-                close_edit_user($(form).parents('.modal-content'));
+                close_dialog($(form).parents('.modal').get(0));
             };
             //执行提交
             oSubmitter.submit();
@@ -136,8 +136,6 @@
     </script>
     <!--点击选择角色-->
     <script type="text/javascript">
-        //获取显示查询可选角色列表的url
-        function get_url_for_show_search_roles() { return '@Url.Action("ShowListSearchRoles", "Role")'; }
         //获取显示可选角色列表的url
         function get_url_for_show_select_roles() { return '@Url.Action("ShowListSelectRoles", "Role")'; }
 
@@ -151,18 +149,14 @@
                 selectFunctionName: 'select_role'
             };
             //加载查询可选职位列表
-            $.post(get_url_for_show_search_roles(), jData, function (data, textStatus, jqXHR) {
+            $.post(get_url_for_show_select_roles(), jData, function (data, textStatus, jqXHR) {
                 //打印log
                 console.log(textStatus);
                 //新建悬停框
                 new bootstrap.Popover(element, {
-                    container: document.body,
-                    content: function () {
-                        let divContainer = document.createElement('div');
-                        divContainer.innerHTML = data;
-                        divContainer.id = 'div-select-roles';
-                        return divContainer;
-                    },
+                    title: '<i class="fa fa-cogs"></i> 可选角色列表',
+                    container: document.getElementById('div-modal-dialog-0'),
+                    content: $(data).get(0),
                     html: true,
                     placement: 'bottom'
                 });
@@ -170,13 +164,22 @@
         }
         //分页查询可选角色列表
         function search_select_roles(pageIndex, pageSize) {
+            //获取当前角色名称输入框
+            let inputRoleName = document.querySelector('#div-modal-dialog-0 form input[name="RoleName"]');
+            //显示当前悬停框
+            let oPopover = bootstrap.Popover.getInstance(inputRoleName);
+            if (oPopover == undefined)
+                return;
+            oPopover.show();
             //创建Table分页加载对象
-            let oTableLoader = new PageTableLoader('#div-select-roles > main', 3);
+            let oTableLoader = new PageTableLoader(oPopover.getTipElement().querySelector('.popover-body'), 3);
             //指定查询url
             oTableLoader.url = get_url_for_show_select_roles();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#div-select-roles > form').serializeObject(),
+                searcher: {
+                    SearchName: inputRoleName.value
+                },
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_select_roles',
@@ -188,24 +191,20 @@
         //选择当前角色
         function select_role(sRoleId, sRoleName) {
             //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            let form = document.querySelector('#div-modal-dialog-0 form');
             //指定角色信息
             form.querySelector('input[name="RoleId"]').value = sRoleId;
             form.querySelector('input[name="RoleName"]').value = sRoleName;
             //关闭当前悬停框
-            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="RoleName"]'));
-            oPopover.hide();
+            bootstrap.Popover.getInstance(form.querySelector('input[name="RoleName"]')).hide();
         }
-        //关闭并取消选择角色列表
-        function close_search_select_roles() {
-            //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+        //清空选择的角色并关闭选择框
+        function clean_select_role(form) {
             //清空角色信息
             form.querySelector('input[name="RoleId"]').value = '';
             form.querySelector('input[name="RoleName"]').value = '';
             //关闭当前悬停框
-            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="RoleName"]'));
-            oPopover.hide();
+            bootstrap.Popover.getInstance(form.querySelector('input[name="RoleName"]')).hide();
         }
     </script>
     <!--点击选择员工-->
@@ -230,7 +229,8 @@
                 console.log(textStatus);
                 //新建悬停框
                 new bootstrap.Popover(element, {
-                    container: document.body,
+                    title: '<i class="fa fa-cogs"></i> 可选员工列表',
+                    container: document.getElementById('div-modal-dialog-0'),
                     content: function () {
                         let divContainer = document.createElement('div');
                         divContainer.innerHTML = data;
@@ -238,7 +238,7 @@
                         return divContainer;
                     },
                     html: true,
-                    placement: 'left'
+                    placement: 'bottom'
                 });
             }, 'html');
         }
@@ -250,7 +250,7 @@
             oTableLoader.url = get_url_for_show_select_employees();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#div-select-employees > form').serializeObject(),
+                searcher: get_form_json('#div-select-employees > form'),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_select_employees',
@@ -260,26 +260,22 @@
             oTableLoader.load();
         }
         //选择当前员工
-        function select_employee(sEmployeeNo, sEmployeeName) {
+        function select_employee(sEmployeeId, sEmployeeName) {
             //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+            let form = document.querySelector('#div-modal-dialog-0 form');
             //指定员工信息
-            form.querySelector('input[name="EmployeeNo"]').value = sEmployeeNo;
+            form.querySelector('input[name="EmployeeId"]').value = sEmployeeId;
             form.querySelector('input[name="EmployeeName"]').value = sEmployeeName;
             //关闭当前悬停框
-            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="EmployeeName"]'));
-            oPopover.hide();
+            bootstrap.Popover.getInstance(form.querySelector('input[name="EmployeeName"]')).hide();
         }
-        //关闭并取消选择员工列表
-        function close_search_select_employees() {
-            //获取当前表单
-            let form = document.querySelector('#main > div[data-name="modal-content-0"] form');
+        //清空选择员工并关闭选择框
+        function clean_select_employee(form) {
             //清空员工信息
-            form.querySelector('input[name="EmployeeNo"]').value = '';
+            form.querySelector('input[name="EmployeeId"]').value = '';
             form.querySelector('input[name="EmployeeName"]').value = '';
             //关闭当前悬停框
-            let oPopover = bootstrap.Popover.getInstance(form.querySelector('input[name="EmployeeName"]'));
-            oPopover.hide();
+            bootstrap.Popover.getInstance(form.querySelector('input[name="EmployeeName"]')).hide();
         }
     </script>
     <!--初始化-->

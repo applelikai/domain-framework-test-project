@@ -1,21 +1,21 @@
-﻿using AutoIHome.Core.Domain.Entities.SysManagement;
+﻿using AutoIHome.Core.Domain.CloudEntity.Framework;
+using AutoIHome.Core.Domain.Entities.SysManagement;
 using CloudEntity.Mapping;
-using CloudEntity.Mapping.Common;
 
 namespace AutoIHome.Core.Domain.CloudEntity.Mappers.SysManagement
 {
     /// <summary>
     /// 用户的Mapper类
     /// </summary>
-    internal class UserMapper : TableMapper<User>
+    internal class UserMapper : BaseMapper<User>
     {
         /// <summary>
-        /// 获取Table元数据
+        /// 获取表别名
         /// </summary>
-        /// <returns>Table元数据</returns>
-        protected override ITableHeader GetHeader()
+        /// <returns>表别名</returns>
+        protected override string GetTableAlias()
         {
-            return base.GetHeader("Sys_Users", tableAlias: "u");
+            return "u";
         }
         /// <summary>
         /// 设置属性映射
@@ -27,7 +27,7 @@ namespace AutoIHome.Core.Domain.CloudEntity.Mappers.SysManagement
             setter.Map(u => u.UserName, allowNull: false).Length(25);
             setter.Map(u => u.Password, ColumnAction.Insert).Length(50);
             setter.Map(u => u.RoleId, allowNull: false).Length(36);
-            setter.Map(u => u.EmployeeNo).Length(25);
+            setter.Map(u => u.EmployeeId).Length(36);
             setter.Map(u => u.CreatedTime, ColumnAction.Default);
         }
     }

@@ -33,9 +33,10 @@ namespace AutoIHome.Core.Domain.CloudEntity.Services.SysManagement
             if (base.Query<User>().Count(u => u.UserName.Equals(user.UserName)) > 0)
                 return (false, $"当前用户名({user.UserName})已被使用");
             //获取默认密码
-            string defaultPassword = base.Query<Parameter>(p => p.ParameterName.Equals("base_default-password"))
-                .Select(p => p.ParameterValue)
-                .SingleOrDefault() ?? "123456";
+            //string defaultPassword = base.Query<Parameter>(p => p.ParameterName.Equals("base_default-password"))
+            //    .Select(p => p.ParameterValue)
+            //    .SingleOrDefault() ?? "123456";
+            string defaultPassword = "123456";
             //添加用户
             user.Password = Md5Helper.GetMd5(defaultPassword);
             base.List<User>().Add(user);
@@ -69,7 +70,7 @@ namespace AutoIHome.Core.Domain.CloudEntity.Services.SysManagement
                 .IncludeBy(e => e.EmployeeName);
             //获取当前用户
             return base.Query<User>()
-                .LeftJoin(employees, u => u.Employee, (u, e) => u.EmployeeNo == e.EmployeeNo)
+                .LeftJoin(employees, u => u.Employee, (u, e) => u.EmployeeId == e.EmployeeId)
                 .SingleOrDefault(e => e.UserName.Equals(userName));
         }
         /// <summary>
@@ -94,7 +95,7 @@ namespace AutoIHome.Core.Domain.CloudEntity.Services.SysManagement
             //获取用户数据源
             IDbQuery<User> users = base.Query<User>()
                 .Join(roles, u => u.Role, (u, r) => u.RoleId == r.RoleId)
-                .LeftJoin(employees, u => u.Employee, (u, e) => u.EmployeeNo == e.EmployeeNo);
+                .LeftJoin(employees, u => u.Employee, (u, e) => u.EmployeeId == e.EmployeeId);
             if (!string.IsNullOrEmpty(searcher.UserName))
                 users = users.Like(u => u.UserName, $"%{searcher.UserName}%");
             //获取用户分页列表

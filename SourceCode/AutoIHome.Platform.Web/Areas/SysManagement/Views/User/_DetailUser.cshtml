@@ -1,34 +1,24 @@
 ﻿@model User
 @{
-    Layout = "_ModalContent";
+    Layout = "_ModalDialog";
 }
 
 <!--用户详情-->
 <div class="row mb-3">
-    <div class="col-md-6 row">
-        <label class="col-md-4 col-form-label text-end">用户名</label>
-        <div class="col-md-8">
-            <input class="form-control" type="text" name="UserName" value="@base.Model.UserName" readonly />
-        </div>
-    </div>
-    <div class="col-md-6 row">
-        <label class="col-md-4 col-form-label text-end">角色名称</label>
-        <div class="col-md-8">
-            <input class="form-control" type="text" name="RoleName" value="@base.Model.Role.RoleName" readonly />
-        </div>
+    <label class="col-md-3 col-form-label text-end">用户名</label>
+    <div class="col-md-9">
+        <input class="form-control" type="text" name="UserName" value="@base.Model.UserName" readonly />
     </div>
 </div>
 <div class="row mb-3">
-    <div class="col-md-6 row">
-        <label class="col-md-4 col-form-label text-end">员工编号</label>
-        <div class="col-md-8">
-            <input class="form-control" type="text" name="EmployeeNo" value="@base.Model.EmployeeNo" readonly />
-        </div>
+    <label class="col-md-3 col-form-label text-end">角色名称</label>
+    <div class="col-md-9">
+        <input class="form-control" type="text" name="RoleName" value="@base.Model.Role.RoleName" readonly />
     </div>
-    <div class="col-md-6 row">
-        <label class="col-md-4 col-form-label text-end">员工姓名</label>
-        <div class="col-md-8">
-            <input class="form-control" type="text" name="EmployeeName" value="@base.Model.Employee.EmployeeName" readonly />
-        </div>
+</div>
+<div class="row mb-3">
+    <label class="col-md-3 col-form-label text-end">员工姓名</label>
+    <div class="col-md-9">
+        <input class="form-control" type="text" name="EmployeeName" value="@base.Model.Employee.EmployeeName" readonly />
     </div>
 </div>

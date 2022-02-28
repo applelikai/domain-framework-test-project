@@ -1,11 +1,10 @@
 ﻿using AutoIHome.Core.Domain.Entities.EmpManagement;
+using AutoIHome.Core.Domain.Models.EmpManagement;
 using AutoIHome.Core.Domain.Services.EmpManagement;
 using AutoIHome.Infrastructure;
 using AutoIHome.Infrastructure.CloudEntity;
 using AutoIHome.Infrastructure.Framework.Services;
-using AutoIHome.Infrastructure.Models;
 using CloudEntity.Data.Entity;
-using System.Collections.Generic;
 
 namespace AutoIHome.Core.Domain.CloudEntity.Services.EmpManagement
 {
@@ -15,49 +14,38 @@ namespace AutoIHome.Core.Domain.CloudEntity.Services.EmpManagement
     internal class JobService : BaseService, IJobService
     {
         /// <summary>
-        /// 获取职位数据源
-        /// </summary>
-        /// <param name="searcher">名称项查询对象</param>
-        /// <returns>职位数据源</returns>
-        private IDbQuery<Job> GetJobQuery(INameSearcher searcher)
-        {
-            //初始化职位数据源,默认预定所有职位(预定时不执行查询，仅构建查询条件)
-            IDbQuery<Job> jobs = base.Query<Job>();
-            //添加条件缩小数据预定范围
-            if (!string.IsNullOrEmpty(searcher.SearchName))
-                jobs = jobs.Like(j => j.JobName, $"%{searcher.SearchName}%");
-            //获取职位数据源
-            return jobs;
-        }
-
-        /// <summary>
         /// 初始化
         /// </summary>
         /// <param name="container">数据容器</param>
         public JobService(IDbContainer container)
             : base(container) { }
         /// <summary>
-        /// 获取职位列表
-        /// </summary>
-        /// <param name="searcher">名称项查询对象</param>
-        /// <returns>职位列表</returns>
-        public IEnumerable<Job> GetJobs(INameSearcher searcher)
-        {
-            //获取职位数据源
-            return this.GetJobQuery(searcher);
-        }
-        /// <summary>
         /// 分页获取职位列表
         /// </summary>
-        /// <param name="searcher">名称项查询对象</param>
+        /// <param name="searcher">职位列表查询对象</param>
         /// <param name="pageIndex">当前页</param>
         /// <param name="pageSize">每页元素数量</param>
         /// <returns>职位分页列表</returns>
-        public IPagedList<Job> GetJobs(INameSearcher searcher, int pageIndex, int pageSize)
+        public IPagedList<Job> GetJobs(IJobSearcher searcher, int pageIndex, int pageSize)
         {
-            //获取职位数据源
-            IDbQuery<Job> jobs = this.GetJobQuery(searcher);
-            //获取职位分页列表
+            //获取部门关联数据源
+            IDbQuery<Department> departments = base.Query<Department>()
+                .IncludeBy(d => d.DepartmentName);
+            //获取职位预定查询数据源
+            IDbQuery<Job> jobs = base.Query<Job>()
+                //并关联部门数据源
+                .Join(departments, j => j.Department, (j, d) => j.DepartmentId == d.DepartmentId);
+            if (!string.IsNullOrEmpty(searcher.DepartmentId))
+            {
+                //若选择了部门，则获取当前部门下的职位数据源
+                jobs = jobs.Where(j => j.DepartmentId.Equals(searcher.DepartmentId));
+            }
+            if (!string.IsNullOrEmpty(searcher.JobName))
+            {
+                //若输入了职位名称，则获取包含当前输入的职位名称的职位数据源
+                jobs = jobs.Like(j => j.JobName, $"%{searcher.JobName}%");
+            }
+            //获取职位预定分页列表
             IDbPagedQuery<Job> pagedJobs = jobs.PagingByDescending(j => j.CreatedTime, pageSize, pageIndex);
             return new PagedList<Job>(pagedJobs);
         }

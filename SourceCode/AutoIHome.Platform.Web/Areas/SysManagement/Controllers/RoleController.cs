@@ -36,19 +36,19 @@ namespace AutoIHome.Platform.Web.Areas.SysManagement.Controllers
         /// 为角色授权菜单列表访问权限
         /// </summary>
         /// <param name="roleId">角色id</param>
-        /// <param name="menuNames">菜单名称数组</param>
+        /// <param name="menus">菜单数组</param>
         /// <returns>结果及提示</returns>
-        public JsonResult SetRoleMenus(string roleId, string[] menuNames)
+        public JsonResult SetRoleMenus(string roleId, RoleMenu[] menus)
         {
             //非空检查
             if (string.IsNullOrEmpty(roleId))
                 return base.Message(false, "请先设置要授权的角色");
-            if (menuNames == null)
+            if (menus == null)
                 return base.Message(false, "请先勾选要授权的菜单");
-            if (menuNames.Length == 0)
+            if (menus.Length == 0)
                 return base.Message(false, "请先勾选要授权的菜单");
             //保存角色菜单列表
-            (bool status, string message) = ServiceContainer.Get<IRoleService>().SaveRoleMenes(roleId, menuNames);
+            (bool status, string message) = ServiceContainer.Get<IRoleService>().SaveRoleMenes(roleId, menus);
             //获取结果及提示
             return base.Message(status, message);
         }
@@ -60,10 +60,10 @@ namespace AutoIHome.Platform.Web.Areas.SysManagement.Controllers
         public JsonResult GetRoleMenus(string roleId)
         {
             //查询当前角色授权的菜单列表
-            IEnumerable<string> menuNames = RepositoryContainer.Get<RoleMenu>()
-                .GetSelect(m => m.MenuName, m => m.RoleId.Equals(roleId));
+            var menus = RepositoryContainer.Get<RoleMenu>()
+                .GetSelect(m => new { m.MenuType, m.MenuName }, m => m.RoleId.Equals(roleId));
             //获取当前角色授权的菜单列表
-            return base.Json(menuNames);
+            return base.Json(menus);
         }
         /// <summary>
         /// 获取当前登录的角色授权的菜单列表

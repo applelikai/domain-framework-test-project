@@ -5,19 +5,22 @@
         <title>汽车平台-@base.ViewData["Title"]</title>
         <!--样式-->
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="~/lib/pnotify/PNotifyBrightTheme.css" />
         <link rel="stylesheet" href="~/lib/layui/css/layui.css" />
         <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/lib/pnotify/PNotifyBrightTheme.css" />
+        @RenderSection("style_libraries", false)
         <link rel="stylesheet" href="~/css/page-layout.css" />
         <link rel="stylesheet" href="~/css/ext-bootstrap.css" />
+        <link rel="stylesheet" href="~/css/ext-components.css" />
         <link rel="stylesheet" href="~/css/ext-utils.css" />
         @RenderSection("styles", false)
         <!--脚本-->
         <script type="text/javascript" src="~/lib/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="~/lib/pnotify/umd/PNotify.js"></script>
         <script type="text/javascript" src="~/lib/layui/layui.js"></script>
         <script type="text/javascript" src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript" src="~/lib/bootbox/bootbox.all.min.js"></script>
-        <script type="text/javascript" src="~/lib/pnotify/umd/PNotify.js"></script>
+        @RenderSection("script_libraries", false)
         <script type="text/javascript" src="~/js/base.js"></script>
         <script type="text/javascript" src="~/js/loaders.js"></script>
         <script type="text/javascript" src="~/js/containers.js"></script>
@@ -129,12 +132,12 @@
                 $.post(get_url_for_login_role_menus(), function (data, textStatus, xhr) {
                     //记录log
                     console.log(textStatus);
-                    //遍历所有菜单名称
-                    data.forEach(function (sMenuName) {
-                        //获取当前li元素
-                        let li = document.querySelector('#nav-child-menus > ul > li[data-name="' + sMenuName + '"]');
-                        //若li不为空
-                        if (li != undefined) {
+                    //遍历所有的菜单
+                    document.querySelectorAll('#div-menus > ul li').forEach(function(li) {
+                        //获取当前菜单的名称
+                        let sMenuName = li.getAttribute('data-name');
+                        //若包含当前菜单名称
+                        if (data.includes(sMenuName)){
                             //若包含(d-none)类样式则移除
                             if (li.classList.contains('d-none'))
                                 li.classList.remove('d-none');
@@ -280,7 +283,7 @@
             <div class="col-md-2" id="div-menus">
                 <!--基础平台-->
                 <ul data-name="basic-management">
-                    <li data-type="parent-menu" data-name="doc-management">
+                    <li class="d-none" data-type="parent-menu" data-name="doc-management">
                         <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-book"></i>
                             <span>文档管理</span>
@@ -288,7 +291,7 @@
                         </a>
                         <!--文档管理下的菜单-->
                         <ul class="collapse">
-                            <li data-type="menu" data-name="edit-article-categories">
+                            <li class="d-none" data-type="menu" data-name="edit-article-categories">
                                 <a href="javascript:void(0);">
                                     <i class="fa fa-th-list"></i>
                                     <span>文章类目</span>
@@ -296,7 +299,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li data-type="parent-menu" data-name="emp-management">
+                    <li class="d-none" data-type="parent-menu" data-name="emp-management">
                         <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-user"></i>
                             <span>员工管理</span>
@@ -304,19 +307,19 @@
                         </a>
                         <!--员工管理下的菜单-->
                         <ul class="collapse">
-                            <li data-type="menu" data-name="edit-departments">
+                            <li class="d-none" data-type="menu" data-name="edit-departments">
                                 <a asp-area="EmpManagement" asp-controller="Department" asp-action="Index">
                                     <i class="fa fa-users"></i>
                                     <span>部门管理</span>
                                 </a>
                             </li>
-                            <li data-type="menu" data-name="edit-jobs">
+                            <li class="d-none" data-type="menu" data-name="edit-jobs">
                                 <a asp-area="EmpManagement" asp-controller="Job" asp-action="Index">
                                     <i class="fa fa-wrench"></i>
                                     <span>职位管理</span>
                                 </a>
                             </li>
-                            <li data-type="menu" data-name="edit-employees">
+                            <li class="d-none" data-type="menu" data-name="edit-employees">
                                 <a asp-area="EmpManagement" asp-controller="Employee" asp-action="Index">
                                     <i class="fa fa-user"></i>
                                     <span>员工管理</span>
@@ -324,7 +327,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li data-type="parent-menu" data-name="right-management">
+                    <li class="d-none" data-type="parent-menu" data-name="right-management">
                         <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-cog"></i>
                             <span>权限管理</span>
@@ -332,19 +335,19 @@
                         </a>
                         <!--权限管理下的二级菜单-->
                         <ul class="collapse">
-                            <li data-type="menu" data-name="edit-roles">
+                            <li class="d-none" data-type="menu" data-name="edit-roles">
                                 <a asp-area="SysManagement" asp-controller="Role" asp-action="Index">
                                     <i class="fa fa-user-circle"></i>
                                     <span>角色管理</span>
                                 </a>
                             </li>
-                            <li data-type="menu" data-name="edit-role-rights">
+                            <li class="d-none" data-type="menu" data-name="edit-role-rights">
                                 <a asp-area="SysManagement" asp-controller="Role" asp-action="Right">
                                     <i class="fa fa-user-circle"></i>
                                     <span>角色授权</span>
                                 </a>
                             </li>
-                            <li data-type="menu" data-name="edit-users">
+                            <li class="d-none" data-type="menu" data-name="edit-users">
                                 <a asp-area="SysManagement" asp-controller="User" asp-action="Index">
                                     <i class="fa fa-user"></i>
                                     <span>用户管理</span>
@@ -355,7 +358,7 @@
                 </ul>
                 <!--汽修平台-->
                 <ul class="d-none" data-name="auto-repair-management">
-                    <li data-type="parent-menu" data-name="vehicle-owner">
+                    <li class="d-none" data-type="parent-menu" data-name="vehicle-owner">
                         <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-car"></i>
                             <span>车主服务</span>
@@ -450,7 +453,7 @@
                 </ul>
                 <!--数据中心-->
                 <ul class="d-none" data-name="data-management">
-                    <li data-type="parent-menu" data-name="reg-management">
+                    <li class="d-none" data-type="parent-menu" data-name="reg-management">
                         <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-area-chart"></i>
                             <span>区域管理</span>
@@ -458,19 +461,19 @@
                         </a>
                         <!--区域管理下的菜单-->
                         <ul class="collapse" data-name="reg-management">
-                            <li data-type="menu" data-name="edit-province-levels">
+                            <li class="d-none" data-type="menu" data-name="edit-province-levels">
                                 <a asp-area="RegManagement" asp-controller="ProvinceLevel" asp-action="Index">
                                     <i class="fa fa-area-chart"></i>
                                     <span>省级行政区</span>
                                 </a>
                             </li>
-                            <li data-type="menu" data-name="edit-prefecture-levels">
+                            <li class="d-none" data-type="menu" data-name="edit-prefecture-levels">
                                 <a asp-area="RegManagement" asp-controller="PrefectureLevel" asp-action="Index">
                                     <i class="fa fa-area-chart"></i>
                                     <span>地级行政区</span>
                                 </a>
                             </li>
-                            <li data-type="menu" data-name="edit-county-levels">
+                            <li class="d-none" data-type="menu" data-name="edit-county-levels">
                                 <a asp-area="RegManagement" asp-controller="CountyLevel" asp-action="Index">
                                     <i class="fa fa-area-chart"></i>
                                     <span>县级行政区</span>
@@ -478,7 +481,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li data-type="parent-menu" data-name="basic-data">
+                    <li class="d-none" data-type="parent-menu" data-name="basic-data">
                         <a href="javascript:void(0);" onclick="show_child_menus(this);">
                             <i class="fa fa-database"></i>
                             <span>基础数据</span>
@@ -486,12 +489,12 @@
                         </a>
                         <!--基础数据下的菜单-->
                         <ul class="collapse">
-                            <li data-type="menu" data-name="edit-object-type-categories">
+                            <li class="d-none" data-type="menu" data-name="edit-object-type-categories">
                                 <a asp-area="BaseManagement" asp-controller="ObjectTypeCategory" asp-action="Index">
                                     <span>基础类型分类</span>
                                 </a>
                             </li>
-                            <li data-type="menu" data-name="edit-object-types">
+                            <li class="d-none" data-type="menu" data-name="edit-object-types">
                                 <a asp-area="BaseManagement" asp-controller="ObjectTypeCategory" asp-action="ObjectTypes">
                                     <span>基础类型管理</span>
                                 </a>
@@ -557,7 +560,7 @@
             //选中当前菜单
             select_menu();
             //显示当前登录角色下所有授权的菜单
-            //show_login_role_menus();
+            show_login_role_menus();
         </script>
     </body>
 </html>

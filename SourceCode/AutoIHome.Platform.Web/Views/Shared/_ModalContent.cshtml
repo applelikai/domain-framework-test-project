@@ -4,7 +4,7 @@
     @base.RenderBody()
 </div>
 <div class="modal-footer">
-    <secondary-button click="go_back($(this).parents('.modal-content'));">
+    <secondary-button click="go_back($(this).parents('.modal-content').get(0));">
         <i class="fa fa-reply"></i>&nbsp;返&nbsp;回
     </secondary-button>
 </div>

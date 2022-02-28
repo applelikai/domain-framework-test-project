@@ -6,13 +6,13 @@
     public interface IEmployeeSearcher
     {
         /// <summary>
-        /// 员工编号
-        /// </summary>
-        string EmployeeNo { get; }
-        /// <summary>
         /// 员工姓名
         /// </summary>
         string EmployeeName { get; }
+        /// <summary>
+        /// 手机号码
+        /// </summary>
+        string PhoneNumber { get; }
         /// <summary>
         /// 部门
         /// </summary>

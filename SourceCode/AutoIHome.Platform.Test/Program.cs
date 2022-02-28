@@ -1,4 +1,5 @@
-﻿using AutoIHome.Core.Domain.Entities.SysManagement;
+﻿using AutoIHome.Core.Domain.Entities.EmpManagement;
+using AutoIHome.Core.Domain.Entities.SysManagement;
 using AutoIHome.Infrastructure.Framework.CloudEntity;
 using Base.RegManagement.Domain.Entities;
 using CloudEntity.Data.Entity;
@@ -39,7 +40,7 @@ namespace AutoIHome.Platform.Test
             //获取数据容器
             IDbContainer container = _containerSet.Get("AutoIHome.Core.Domain");
             //其他操作
-            container.InitTable<Role>();
+            container.InitTable<RoleMenu>();
         }
     }
 }

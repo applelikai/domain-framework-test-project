@@ -1,46 +1,36 @@
 ﻿@model Department
 @{
-    Layout = "_ModalContentForm";
+    Layout = "_ModalDialogForm";
 }
 
 <!--编辑部门表单-->
 <form action="javascript:void(0);" onsubmit="save_department(this);">
     <div class="row mb-3">
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">部门编号</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="DepartmentNo" value="@base.Model.DepartmentNo" readonly />
-            </div>
-        </div>
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">上级部门编号</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="ParentDepartmentNo" value="@base.Model.ParentDepartmentNo" />
-            </div>
+        <label class="col-md-3 col-form-label text-end">部门名称</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="DepartmentName" value="@base.Model.DepartmentName" required />
+            <invalid-message>请输入部门名称</invalid-message>
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">部门名称</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="DepartmentName" value="@base.Model.DepartmentName" required />
-                <invalid-message>请输入部门名称</invalid-message>
-            </div>
-        </div>
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">部门领导</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="DepartmentManager" value="@base.Model.DepartmentManager" required />
-                <invalid-message>请输入部门领导</invalid-message>
-            </div>
+        <label class="col-md-3 col-form-label text-end">上级部门</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" value="@base.Model.Parent.DepartmentInfoName" readonly />
         </div>
     </div>
-    <div class="row mb-3 pe-md-4">
-        <div class="col-md-12 row">
-            <label class="col-md-2 col-form-label text-end">备注</label>
-            <div class="col-md-10">
-                <input class="form-control" type="text" name="Remark" value="@base.Model.Remark" />
-            </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">部门领导</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="DepartmentManager" value="@base.Model.DepartmentManager" />
         </div>
     </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">备注</label>
+        <div class="col-md-9">
+            <textarea class="form-control" name="Remark">@base.Model.Remark</textarea>
+        </div>
+    </div>
+    <!--隐藏变量-->
+    <input type="hidden" name="DepartmentId" value="@base.Model.DepartmentId" />
+    <input type="hidden" name="ParentId" value="@base.Model.ParentId" />
 </form>

@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Extension.OpenXml", "Extens
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoIHome.Infrastructure.Framework", "AutoIHome.Infrastructure.Framework\AutoIHome.Infrastructure.Framework.csproj", "{0E7C6BA6-6785-446D-BBC7-19B59C884B90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoIHome.Infrastructure.CloudEntity", "AutoIHome.Infrastructure.CloudEntity\AutoIHome.Infrastructure.CloudEntity.csproj", "{D9D56B5E-2A35-40C4-BF62-86F0B4211640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoIHome.Infrastructure.CloudEntity", "AutoIHome.Infrastructure.CloudEntity\AutoIHome.Infrastructure.CloudEntity.csproj", "{D9D56B5E-2A35-40C4-BF62-86F0B4211640}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoIHome.AspNetCore.WebUi", "AutoIHome.AspNetCore.WebUi\AutoIHome.AspNetCore.WebUi.csproj", "{A566F313-4DF2-4288-ADE3-09AF6B3F94CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{D9D56B5E-2A35-40C4-BF62-86F0B4211640}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9D56B5E-2A35-40C4-BF62-86F0B4211640}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9D56B5E-2A35-40C4-BF62-86F0B4211640}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A566F313-4DF2-4288-ADE3-09AF6B3F94CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A566F313-4DF2-4288-ADE3-09AF6B3F94CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A566F313-4DF2-4288-ADE3-09AF6B3F94CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A566F313-4DF2-4288-ADE3-09AF6B3F94CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

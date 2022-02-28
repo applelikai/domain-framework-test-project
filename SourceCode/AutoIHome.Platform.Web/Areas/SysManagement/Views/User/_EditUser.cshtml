@@ -1,41 +1,45 @@
 ﻿@model User
 @{
-    Layout = "_ModalContentForm";
+    Layout = "_ModalDialogForm";
 }
 
 <!--编辑用户表单-->
 <form action="javascript:void(0);" onsubmit="save_user(this);">
     <div class="row mb-3">
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">用户名</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="UserName" value="@base.Model.UserName" required />
-                <invalid-message>请输入用户名</invalid-message>
-            </div>
+        <label class="col-md-3 col-form-label text-end">用户名</label>
+        <div class="col-md-9">
+            <input class="form-control" type="text" name="UserName" value="@base.Model.UserName" required />
+            <invalid-message>请输入用户名</invalid-message>
         </div>
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">角色名称</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="RoleName" data-bs-toggle="popover" value="@base.Model.Role.RoleName" required />
+    </div>
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label text-end">角色名称</label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <input class="form-control" type="text" name="RoleName" value="@base.Model.Role.RoleName" data-bs-toggle="popover" data-id-field="RoleId" required />
+                <button class="input-group-text text-primary" type="button" onclick="search_select_roles(1);">
+                    <partial name="_IconSearch" />
+                </button>
+                <button class="input-group-text text-secondary" type="button" onclick="clean_select_role($(this).parents('form').get(0));">
+                    <partial name="_IconClean" />
+                </button>
                 <invalid-message>请选择角色</invalid-message>
             </div>
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">员工编号</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="EmployeeNo" value="@base.Model.EmployeeNo" readonly />
-            </div>
-        </div>
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">员工姓名</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="EmployeeName" data-bs-toggle="popover" value="@base.Model.Employee.EmployeeName" />
+        <label class="col-md-3 col-form-label text-end">员工姓名</label>
+        <div class="col-md-9">
+            <div class="input-group">
+                <input class="form-control" type="text" name="EmployeeName" value="@base.Model.Employee.EmployeeName" data-bs-toggle="popover" data-id-field="EmployeeId" />
+                <button class="input-group-text text-secondary" type="button" onclick="clean_select_employee($(this).parents('form').get(0));">
+                    <partial name="_IconClean" />
+                </button>
             </div>
         </div>
     </div>
     <!--隐藏变量-->
     <input type="hidden" name="UserId" value="@base.Model.UserId" />
     <input type="hidden" name="RoleId" value="@base.Model.RoleId" />
+    <input type="hidden" name="EmployeeId" value="@base.Model.EmployeeId" />
 </form>

@@ -16,6 +16,14 @@ namespace AutoIHome.Core.Domain.Entities.EmpManagement
         /// </summary>
         public string JobName { get; set; }
         /// <summary>
+        /// 部门id
+        /// </summary>
+        public string DepartmentId { get; set; }
+        /// <summary>
+        /// 所属部门
+        /// </summary>
+        public Department Department { get; set; }
+        /// <summary>
         /// 备注
         /// </summary>
         public string Remark { get; set; }

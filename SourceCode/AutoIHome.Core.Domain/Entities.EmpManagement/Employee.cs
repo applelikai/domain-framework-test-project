@@ -8,9 +8,9 @@ namespace AutoIHome.Core.Domain.Entities.EmpManagement
     public class Employee
     {
         /// <summary>
-        /// 员工编号
+        /// 员工id
         /// </summary>
-        public string EmployeeNo { get; set; }
+        public string EmployeeId { get; set; }
         /// <summary>
         /// 员工姓名
         /// </summary>
@@ -40,9 +40,9 @@ namespace AutoIHome.Core.Domain.Entities.EmpManagement
             }
         }
         /// <summary>
-        /// 部门编号
+        /// 部门id
         /// </summary>
-        public string DepartmentNo { get; set; }
+        public string DepartmentId { get; set; }
         /// <summary>
         /// 部门
         /// </summary>
@@ -91,10 +91,10 @@ namespace AutoIHome.Core.Domain.Entities.EmpManagement
         /// <summary>
         /// 初始化
         /// </summary>
-        /// <param name="employeeNo">员工编号</param>
-        public Employee(string employeeNo)
+        /// <param name="employeeId">员工id</param>
+        public Employee(string employeeId)
         {
-            this.EmployeeNo = employeeNo;
+            this.EmployeeId = employeeId;
         }
     }
 }

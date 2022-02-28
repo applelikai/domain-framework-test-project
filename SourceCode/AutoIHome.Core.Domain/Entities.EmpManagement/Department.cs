@@ -8,9 +8,9 @@ namespace AutoIHome.Core.Domain.Entities.EmpManagement
     public class Department
     {
         /// <summary>
-        /// 部门编号
+        /// 部门Id
         /// </summary>
-        public string DepartmentNo { get; set; }
+        public string DepartmentId { get; set; }
         /// <summary>
         /// 部门名称
         /// </summary>
@@ -20,9 +20,13 @@ namespace AutoIHome.Core.Domain.Entities.EmpManagement
         /// </summary>
         public string DepartmentManager { get; set; }
         /// <summary>
-        /// 上级部门编号
+        /// 上级部门Id
         /// </summary>
-        public string ParentDepartmentNo { get; set; }
+        public string ParentId { get; set; }
+        /// <summary>
+        /// 上级部门
+        /// </summary>
+        public DepartmentInfo Parent { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
@@ -42,7 +46,7 @@ namespace AutoIHome.Core.Domain.Entities.EmpManagement
         /// <param name="departmentId">部门id</param>
         public Department(string departmentId)
         {
-            this.DepartmentNo = departmentId;
+            this.DepartmentId = departmentId;
         }
     }
 }

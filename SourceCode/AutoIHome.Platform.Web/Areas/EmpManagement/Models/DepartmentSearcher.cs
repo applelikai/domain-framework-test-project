@@ -8,9 +8,13 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Models
     public class DepartmentSearcher : IDepartmentSearcher
     {
         /// <summary>
-        /// 部门编号
+        /// 上级部门id
         /// </summary>
-        public string DepartmentNo { get; set; }
+        public string ParentId { get; set; }
+        /// <summary>
+        /// 上级部门名称
+        /// </summary>
+        public string ParentName { get; set; }
         /// <summary>
         /// 部门名称
         /// </summary>

@@ -1,63 +1,87 @@
-﻿@section scripts{
+﻿@section style_libraries{
+    <link rel="stylesheet" href="~/lib/jquery-miniui/themes/default/miniui.css" />
+    <link rel="stylesheet" href="~/lib/jquery-miniui/themes/metro-blue/skin.css" />
+}
+@section script_libraries{
+    <script type="text/javascript" src="~/lib/jquery-miniui/miniui.js"></script>
+}
+@section scripts{
     <!--添加引用-->
     <script type="text/javascript" src="~/js/_references.js"></script>
     <script type="text/javascript" src="~/lib/layui/layui.js"></script>
     <!--菜单-->
     <script type="text/javascript">
-        //获取当前模块下的菜单列表
-        function get_child_menus(moduleName) {
+        //获取当前菜单下的子菜单列表
+        function get_child_menus(liMenu) {
             //获取菜单li数组
-            let arrayLiMenus = Array.from(document.querySelectorAll('#nav-child-menus > .navbar-nav[data-name="' + moduleName + '"] > li'));
+            let arrayLiMenus = Array.from(liMenu.querySelectorAll('ul > li')).filter(function (liChildMenu) {
+                return liChildMenu.getAttribute('data-name') != null && liChildMenu.getAttribute('data-type') != null;
+            });
+            //获取菜单数据项数组
+            return arrayLiMenus.map(function (liChildMenu) {
+                return {
+                    type: liChildMenu.getAttribute('data-type'),
+                    name: liChildMenu.getAttribute('data-name'),
+                    title: liChildMenu.querySelector('a > span').textContent,
+                    children: get_child_menus(liChildMenu)
+                };
+            });
+        }
+        //获取当前模块下的菜单列表
+        function get_module_child_menus(moduleName) {
+            //获取菜单li数组
+            let arrayLiMenus = Array.from(document.querySelectorAll('#div-menus > ul[data-name="' + moduleName + '"] > li')).filter(function (liMenu) {
+                return liMenu.getAttribute('data-name') != null && liMenu.getAttribute('data-type') != null;
+            });
             //获取菜单数据项数组
             return arrayLiMenus.map(function (liMenu) {
                 return {
-                    id: liMenu.getAttribute('data-name'),
-                    title: liMenu.querySelector('a > span').textContent
+                    type: liMenu.getAttribute('data-type'),
+                    name: liMenu.getAttribute('data-name'),
+                    title: liMenu.querySelector('a > span').textContent,
+                    children: get_child_menus(liMenu)
                 };
             });
         }
         //获取所有的模块菜单列表
         function get_module_menus() {
-            //获取模块li数组
-            let arrayLiModules = Array.from(document.querySelectorAll('#ul-sidebar > .nav-item')).filter(function (liModule) {
-                return liModule.getAttribute('data-name') != null;
-            });
+            //获取模块button数组
+            let arrayBtnModules = Array.from(document.querySelectorAll('#div-modules > button'));
             //获取模块数据项数组
-            return arrayLiModules.map(function (liModule) {
+            return arrayBtnModules.map(function (btnModule) {
                 //获取模块名称
-                let sModuleName = liModule.getAttribute('data-name');
+                let sModuleName = btnModule.getAttribute('data-name');
                 //获取数据项
                 return {
-                    id: sModuleName,
-                    title: liModule.querySelector('a > span').textContent,
-                    children: get_child_menus(sModuleName)
+                    type: 'module',
+                    name: sModuleName,
+                    title: btnModule.querySelector('span').textContent,
+                    children: get_module_child_menus(sModuleName)
                 };
             });
         }
         //加载菜单列表
         function load_menus() {
-            //引用layui的tree模块
-            layui.use('tree', function () {
-                //获取树
-                let tree = layui.tree;
-                //渲染
-                tree.render({
-                    elem: document.querySelector('#div-main > div[data-name="main"] div[data-name="menus"]'),
-                    data: get_module_menus(),
-                    id: 'tree-menus',
-                    showCheckbox: true
-                });
+            //创建tree对象
+            let tree = new mini.Tree(document.querySelector('#div-main > div[data-name="main"] div[data-name="tree-menus"]'));
+            //指定选项
+            tree.set({
+                id: 'tree-menus',
+                showTreeIcon: true,
+                showCheckBox: true,
+                idField: 'name',
+                textField: 'title',
+                nodesField: 'children'
             });
+            //加载数据
+            tree.loadData(get_module_menus());
         }
         //重新加载菜单列表
         function reload_menus() {
-            //引用layui的tree模块
-            layui.use('tree', function () {
-                //获取树
-                let tree = layui.tree;
-                //渲染
-                tree.reload('tree-menus');
-            });
+            //获取tree对象
+            let tree = mini.get('tree-menus');
+            //加载数据
+            tree.loadData(get_module_menus());
         }
     </script>
     <!--查询展示-->
@@ -75,7 +99,7 @@
             oTableLoader.url = get_url_for_show_roles();
             //指定查询参数
             oTableLoader.data = {
-                searcher: $('#div-main > div[data-name="main"] form[role="search"]').serializeObject(),
+                searcher: get_form_json('#div-main > div[data-name="main"] form[role="search"]'),
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 functionName: 'search_roles',
@@ -91,15 +115,14 @@
                 //打印log
                 console.log(data);
                 console.log(textStatus);
-                //引用layui的tree模块
-                layui.use('tree', function () {
-                    //获取树
-                    let tree = layui.tree;
-                    //重新加载
-                    tree.reload('tree-menus');
-                    //选中当前角色有权限访问的菜单
-                    tree.setChecked('tree-menus', data);
-                });
+                //获取最终的菜单名称数组
+                let arrayMenuNames = data.map(m => m.MenuName);
+                //获取tree对象
+                let tree = mini.get('tree-menus');
+                //重新加载数据
+                tree.loadData(get_module_menus());
+                //选中当前角色有权限访问的菜单
+                tree.checkNodes(arrayMenuNames);
             });
         }
         //加载当前角色信息
@@ -118,30 +141,19 @@
         //获取授权角色菜单的url
         function get_url_for_set_role_menus() { return '@Url.Action("SetRoleMenus")'; }
 
-        //获取选中的菜单的菜单名称数组
-        function get_selected_menu_names() {
-            //初始化菜单名称数组
-            let arrayMenuNames = [];
-            //引用layui的tree模块
-            layui.use('tree', function () {
-                //获取树
-                let tree = layui.tree;
-                //获取选中的菜单列表
-                let arrayMenus = tree.getChecked('tree-menus');
-                //直接遍历加载二级菜单列表
-                arrayMenus.forEach(function (oMenu) {
-                    //若子菜单列表不为空
-                    if (oMenu.children != undefined) {
-                        //遍历二级菜单列表
-                        oMenu.children.forEach(function (oChildMenu) {
-                            //添加至菜单名称数组
-                            arrayMenuNames.push(oChildMenu.id);
-                        });
-                    }
-                });
+        //获取选中的菜单的菜单数组
+        function get_selected_menus() {
+            //获取tree对象
+            let tree = mini.get('tree-menus');
+            //读取选中的菜单的菜单数组
+            let arrayMenus = tree.getCheckedNodes(true).map(function (oMenu) {
+                return {
+                    MenuType: oMenu.type,
+                    MenuName: oMenu.name
+                }
             });
-            //获取选中的菜单的菜单名称数组
-            return arrayMenuNames;
+            //获取选中的菜单的菜单数组
+            return arrayMenus;
         }
         //为当前角色授予菜单访问权限
         function set_role_menus() {
@@ -154,7 +166,7 @@
             //指定参数
             oSubmitter.data = {
                 roleId: sRoleId,
-                menuNames: get_selected_menu_names()
+                menus: get_selected_menus()
             };
             //指定提交完成后的回掉函数
             oSubmitter.call_back = function () {
@@ -244,7 +256,8 @@
             <input type="hidden" name="RoleId" />
         </form>
         <!--菜单展示-->
-        <div class="bg-white w-100 mt-2 p-0 overflow-scroll-y" data-name="menus" style="height:80%;">
+        <div class="bg-white w-100 mt-2 p-0 overflow-scroll-y" style="height:80%;">
+            <div data-name="tree-menus"></div>
         </div>
     </div>
 </div>

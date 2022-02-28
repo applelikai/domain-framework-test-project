@@ -52,7 +52,7 @@ function TableLoader(sSelector, nColspan) {
     //加载
     this.load = function () {
         //获取当前容器
-        let divContainer = document.querySelector(sSelector),
+        let divContainer = get_html_element(sSelector),
             sLoadingHtml = '<tr><td colspan="' + nColspan + '">' + get_loading_html() + '</td></tr>';
         //加载tbody
         divContainer.querySelector('table > tbody').innerHTML = sLoadingHtml;
@@ -104,7 +104,7 @@ function PageTableLoader(sSelector, nColspan) {
     //加载
     this.load = function () {
         //获取当前容器
-        let divContainer = document.querySelector(sSelector);
+        let divContainer = get_html_element(sSelector);
         //确定当前页和页大小
         if (this.data.pageIndex == undefined)
             this.data.pageIndex = divContainer.querySelector('input[name="PageIndex"]').value;

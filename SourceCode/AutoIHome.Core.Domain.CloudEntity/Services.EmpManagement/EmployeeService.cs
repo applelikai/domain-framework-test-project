@@ -33,13 +33,12 @@ namespace AutoIHome.Core.Domain.CloudEntity.Services.EmpManagement
                 jobs = jobs.Like(j => j.JobName, $"%{searcher.JobName}%");
             //获取员工数据源
             IDbQuery<Employee> employees = base.Query<Employee>()
-                .IncludeBy(e => new { e.EmployeeNo, e.EmployeeName, e.Sex, e.Birthday, e.JoinDate, e.CreatedTime })
-                .LeftJoin(departments, e => e.Department, (e, d) => e.DepartmentNo == d.DepartmentNo)
+                .LeftJoin(departments, e => e.Department, (e, d) => e.DepartmentId == d.DepartmentId)
                 .LeftJoin(jobs, e => e.Job, (e, j) => e.JobId == j.JobId);
-            if (!string.IsNullOrEmpty(searcher.EmployeeNo))
-                employees = employees.Where(e => e.EmployeeNo.Equals(searcher.EmployeeNo));
             if (!string.IsNullOrEmpty(searcher.EmployeeName))
                 employees = employees.Like(e => e.EmployeeName, $"%{searcher.EmployeeName}%");
+            if (!string.IsNullOrEmpty(searcher.PhoneNumber))
+                employees = employees.Like(e => e.PhoneNumber, $"%{searcher.PhoneNumber}%");
             if (searcher.IsDeleted != null)
                 employees = employees.Where(e => e.IsDeleted == searcher.IsDeleted);
             return employees;

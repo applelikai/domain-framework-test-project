@@ -8,13 +8,13 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Models
     public class EmployeeSearcher : IEmployeeSearcher
     {
         /// <summary>
-        /// 员工编号
-        /// </summary>
-        public string EmployeeNo { get; set; }
-        /// <summary>
         /// 员工姓名
         /// </summary>
         public string EmployeeName { get; set; }
+        /// <summary>
+        /// 手机号码
+        /// </summary>
+        public string PhoneNumber { get; set; }
         /// <summary>
         /// 部门
         /// </summary>

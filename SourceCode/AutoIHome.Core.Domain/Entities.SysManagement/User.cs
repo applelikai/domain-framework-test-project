@@ -31,7 +31,7 @@ namespace AutoIHome.Core.Domain.Entities.SysManagement
         /// <summary>
         /// 员工编号
         /// </summary>
-        public string EmployeeNo { get; set; }
+        public string EmployeeId { get; set; }
         /// <summary>
         /// 员工
         /// </summary>

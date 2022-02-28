@@ -24,17 +24,20 @@ namespace Extension.OpenXml.AutoIHome.Core.Services.EmpManagement
             //添加标题
             Row titleRow = new Row();
             titleRow.AppendChild(ExcelHelper.NewCell(title, 1U));
-            for (int i = 1; i < 8; i++)
+            for (int i = 1; i < 11; i++)
                 titleRow.AppendChild(ExcelHelper.NewEmptyCell(1U));
             sheetData.AppendChild(titleRow);
             //添加表头
             Row headerRow = new Row();
-            headerRow.AppendChild(ExcelHelper.NewCell("员工编号", 1U));
             headerRow.AppendChild(ExcelHelper.NewCell("员工姓名", 1U));
             headerRow.AppendChild(ExcelHelper.NewCell("性别", 1U));
+            headerRow.AppendChild(ExcelHelper.NewCell("身份证号码", 1U));
+            headerRow.AppendChild(ExcelHelper.NewCell("出生日期", 1U));
             headerRow.AppendChild(ExcelHelper.NewCell("年龄", 1U));
             headerRow.AppendChild(ExcelHelper.NewCell("部门", 1U));
             headerRow.AppendChild(ExcelHelper.NewCell("职位", 1U));
+            headerRow.AppendChild(ExcelHelper.NewCell("手机号码", 1U));
+            headerRow.AppendChild(ExcelHelper.NewCell("电子邮箱", 1U));
             headerRow.AppendChild(ExcelHelper.NewCell("入职日期", 1U));
             headerRow.AppendChild(ExcelHelper.NewCell("录入时间", 1U));
             sheetData.AppendChild(headerRow);
@@ -44,12 +47,15 @@ namespace Extension.OpenXml.AutoIHome.Core.Services.EmpManagement
                 //创建行
                 Row row = new Row();
                 //拼接单元格
-                row.AppendChild(ExcelHelper.NewCell(employee.EmployeeNo));
                 row.AppendChild(ExcelHelper.NewCell(employee.EmployeeName));
                 row.AppendChild(ExcelHelper.NewCell(employee.Sex));
+                row.AppendChild(ExcelHelper.NewCell(employee.IdNumber));
+                row.AppendChild(ExcelHelper.NewDateCell(employee.Birthday));
                 row.AppendChild(ExcelHelper.NewCell(employee.Age));
                 row.AppendChild(ExcelHelper.NewCell(employee.Department.DepartmentName));
                 row.AppendChild(ExcelHelper.NewCell(employee.Job.JobName));
+                row.AppendChild(ExcelHelper.NewCell(employee.PhoneNumber));
+                row.AppendChild(ExcelHelper.NewCell(employee.Email));
                 row.AppendChild(ExcelHelper.NewDateCell(employee.JoinDate));
                 row.AppendChild(ExcelHelper.NewDateTimeCell(employee.CreatedTime));
                 //拼接行
@@ -59,7 +65,7 @@ namespace Extension.OpenXml.AutoIHome.Core.Services.EmpManagement
             MergeCells mergeCells = new MergeCells();
             mergeCells.AppendChild(new MergeCell()
             {
-                Reference = "A1:H1"
+                Reference = "A1:K1"
             });
             Worksheet worksheet = new Worksheet(sheetData, mergeCells);
             //保存Excel并获取文件相对路径

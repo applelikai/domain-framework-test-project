@@ -6,9 +6,13 @@
     public interface IDepartmentSearcher
     {
         /// <summary>
-        /// 部门编号
+        /// 上级部门id
         /// </summary>
-        string DepartmentNo { get; }
+        string ParentId { get; }
+        /// <summary>
+        /// 上级部门名称
+        /// </summary>
+        string ParentName { get; }
         /// <summary>
         /// 部门名称
         /// </summary>

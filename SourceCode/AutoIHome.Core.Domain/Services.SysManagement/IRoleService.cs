@@ -20,9 +20,9 @@ namespace AutoIHome.Core.Domain.Services.SysManagement
         /// 保存角色权限菜单列表
         /// </summary>
         /// <param name="roleId">角色id</param>
-        /// <param name="menuNames">菜单名称数组</param>
+        /// <param name="menus">菜单数组</param>
         /// <returns>结果及提示</returns>
-        (bool, string) SaveRoleMenes(string roleId, string[] menuNames);
+        (bool, string) SaveRoleMenes(string roleId, RoleMenu[] menus);
         /// <summary>
         /// 分页获取角色列表
         /// </summary>

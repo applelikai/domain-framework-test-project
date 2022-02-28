@@ -7,7 +7,7 @@
     <primary-button class="me-2" click="$(this).parents('.modal-content').find('form').submit();">
         <i class="fa fa-save"></i>&nbsp;保&nbsp;存
     </primary-button>
-    <secondary-button class="me-5" click="go_back($(this).parents('.modal-content'));">
+    <secondary-button class="me-5" click="go_back($(this).parents('.modal-content').get(0));">
         取&nbsp;&nbsp;消
     </secondary-button>
 </div>

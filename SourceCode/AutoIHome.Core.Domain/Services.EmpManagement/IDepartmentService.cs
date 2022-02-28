@@ -12,12 +12,6 @@ namespace AutoIHome.Core.Domain.Services.EmpManagement
     public interface IDepartmentService
     {
         /// <summary>
-        /// 获取部门列表
-        /// </summary>
-        /// <param name="searcher">部门列表查询对象</param>
-        /// <returns>部门列表</returns>
-        IEnumerable<Department> GetDepartments(IDepartmentSearcher searcher);
-        /// <summary>
         /// 分页获取部门列表
         /// </summary>
         /// <param name="searcher">部门列表查询对象</param>
@@ -39,15 +33,6 @@ namespace AutoIHome.Core.Domain.Services.EmpManagement
             get { return ServiceContainer.Get<IDepartmentService>(); }
         }
 
-        /// <summary>
-        /// 获取部门列表
-        /// </summary>
-        /// <param name="searcher">部门列表查询对象</param>
-        /// <returns>部门列表</returns>
-        public static IEnumerable<Department> GetDepartments(this IDepartmentSearcher searcher)
-        {
-            return _Service.GetDepartments(searcher);
-        }
         /// <summary>
         /// 分页获取部门列表
         /// </summary>

@@ -5,23 +5,14 @@
 <!--新建员工表单-->
 <form action="javascript:void(0);" onsubmit="add_employee(this);">
     <div class="row mb-3">
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">员工编号</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" name="EmployeeNo" required />
-                <invalid-message>请输入员工编号</invalid-message>
-            </div>
-        </div>
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">员工姓名</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" name="EmployeeName" required />
                 <invalid-message>请输入员工姓名</invalid-message>
             </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">性别</label>
             <div class="col-md-8 row justify-content-center">
                 <div class="col-md-4 form-check">
@@ -34,7 +25,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">身份证号码</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" name="IdNumber" required />
@@ -43,74 +34,86 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">出生日期</label>
             <div class="col-md-8">
-                <input class="form-control" type="text" data-role="datepicker" name="Birthday" required  />
+                <input class="form-control" type="text" data-role="datepicker" name="Birthday" required />
                 <invalid-message>请选择出生日期</invalid-message>
             </div>
         </div>
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">年龄</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" name="Age" readonly />
             </div>
         </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">部门</label>
             <div class="col-md-8">
-                <input class="form-control" type="text" data-bs-toggle="popover" name="DepartmentName" required />
-                <invalid-message>请选择部门</invalid-message>
-            </div>
-        </div>
-        <div class="col-md-6 row">
-            <label class="col-md-4 col-form-label text-end">职位</label>
-            <div class="col-md-8">
-                <input class="form-control" type="text" data-bs-toggle="popover" name="JobName" required />
-                <invalid-message>请选择职位</invalid-message>
+                <div class="input-group">
+                    <input class="form-control" type="text" name="DepartmentName" data-bs-toggle="popover" data-id-field="DepartmentId" required />
+                    <button class="input-group-text text-secondary" type="button" onclick="clean_select_department($(this).parents('form').get(0));">
+                        <partial name="_IconClean" />
+                    </button>
+                    <invalid-message>请选择部门</invalid-message>
+                </div>
             </div>
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">手机号码</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" name="PhoneNumber" />
             </div>
         </div>
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">电子邮箱</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" name="Email" />
             </div>
         </div>
-    </div>
-    <div class="row mb-3 pe-md-4">
-        <div class="col-md-12 row">
-            <label class="col-md-2 col-form-label text-end">家庭住址</label>
-            <div class="col-md-10">
-                <input class="form-control" type="text" name="Address" />
+        <div class="col-md-4 row">
+            <label class="col-md-4 col-form-label text-end">职位</label>
+            <div class="col-md-8">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="JobName" data-bs-toggle="popover" data-id-field="JobId" required />
+                    <button class="input-group-text text-primary" type="button" onclick="search_select_jobs(1);">
+                        <partial name="_IconSearch" />
+                    </button>
+                    <button class="input-group-text text-secondary" type="button" onclick="clean_select_job($(this).parents('form').get(0));">
+                        <partial name="_IconClean" />
+                    </button>
+                    <invalid-message>请选择职位</invalid-message>
+                </div>
             </div>
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">入职日期</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" data-role="datepicker" name="JoinDate" required />
                 <invalid-message>请选择入职日期</invalid-message>
             </div>
         </div>
-        <div class="col-md-6 row">
+        <div class="col-md-4 row">
             <label class="col-md-4 col-form-label text-end">离职日期</label>
             <div class="col-md-8">
                 <input class="form-control" type="text" data-role="datepicker" name="LeaveDate" />
             </div>
         </div>
     </div>
+    <div class="row mb-3">
+        <div class="col-md-8 row">
+            <label class="col-md-2 col-form-label text-end">家庭住址</label>
+            <div class="col-md-10">
+                <input class="form-control" type="text" name="Address" />
+            </div>
+        </div>
+    </div>
     <!--隐藏变量-->
-    <input type="hidden" name="DepartmentNo" />
+    <input type="hidden" name="EmployeeId" value="@GuidHelper.NewOrdered().ToString()" />
+    <input type="hidden" name="DepartmentId" />
     <input type="hidden" name="JobId" />
 </form>

@@ -3,20 +3,13 @@
     string function = base.ViewBag.Function;
 }
 
-<!--头-->
-<nav class="nav">
-    <!--标题-->
-    <h5 class="me-auto text-primary"><i class="fa fa-cogs"></i> @base.ViewData["Title"]</h5>
-    <!--关闭按钮-->
-    <button class="btn-close" type="button" onclick="close_@(function)();"></button>
-</nav>
 <!--查询表单-->
 <form class="container-fluid mb-2">
     <div class="row">
         <div class="col-md-5 row">
-            <label class="col-md-4 col-form-label text-end">部门编号:</label>
+            <label class="col-md-4 col-form-label text-end">上级部门:</label>
             <div class="col-md-8">
-                <input class="form-control" type="text" name="DepartmentNo" />
+                <input class="form-control" type="text" name="ParentName" />
             </div>
         </div>
         <div class="col-md-5 row">

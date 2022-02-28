@@ -6,6 +6,7 @@ using AutoIHome.Platform.Web.Controllers;
 using AutoIHome.Platform.Web.Filters;
 using Domain.Framework.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace AutoIHome.Platform.Web.Areas.EmpManagement.Controllers
 {
@@ -19,18 +20,29 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Controllers
         /// <summary>
         /// 删除部门
         /// </summary>
-        /// <param name="departmentNo">部门编号</param>
+        /// <param name="departmentId">部门id</param>
         /// <returns>结果及提示</returns>
-        public JsonResult RemoveDepartment(string departmentNo)
+        public JsonResult RemoveDepartment(string departmentId)
         {
             //检查当前部门是否被使用
-            int count = RepositoryContainer.Get<Employee>().GetCount(e => e.DepartmentNo.Equals(departmentNo));
+            int count = RepositoryContainer.Get<Employee>().GetCount(e => e.DepartmentId.Equals(departmentId));
             if (count > 0)
                 return base.Message(false, "当前部门已被使用");
             //删除部门
-            RepositoryContainer.Get<Department>().RemoveAll(d => d.DepartmentNo.Equals(departmentNo));
+            RepositoryContainer.Get<Department>().RemoveAll(d => d.DepartmentId.Equals(departmentId));
             //获取结果提示
             return base.Message(true, "删除成功");
+        }
+        /// <summary>
+        /// 获取部门列表
+        /// </summary>
+        /// <returns>部门列表</returns>
+        public JsonResult GetDepartments()
+        {
+            //获取部门列表
+            IEnumerable<Department> departments = RepositoryContainer.Get<Department>().GetAll();
+            //获取部门列表json数据
+            return base.Json(departments);
         }
 
         /// <summary>
@@ -38,7 +50,8 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Controllers
         /// </summary>
         /// <returns>部门管理</returns>
         [ViewCheckLoginFilter()]
-        [Module("emp-management")]
+        [Module("basic-management")]
+        [ParentMenu("emp-management")]
         [Menu("edit-departments")]
         public ViewResult Index()
         {
@@ -49,30 +62,46 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Controllers
         }
 
         /// <summary>
+        /// 显示新建部门
+        /// </summary>
+        /// <param name="parentId">上级部门id</param>
+        /// <returns>显示新建部门的分部视图</returns>
+        public PartialViewResult ShowNewDepartment(string parentId)
+        {
+            //获取标题
+            base.ViewData["Title"] = "新建部门";
+            //获取上级部门
+            Department parent = RepositoryContainer.Get<Department>().Get(parentId) ?? new Department();
+            //获取分部视图
+            return base.PartialView("_NewDepartment", parent);
+        }
+        /// <summary>
         /// 显示编辑部门
         /// </summary>
-        /// <param name="departmentNo">部门编号</param>
+        /// <param name="departmentId">部门id</param>
         /// <returns>显示编辑部门的分部视图</returns>
-        public PartialViewResult ShowEditDepartment(string departmentNo)
+        public PartialViewResult ShowEditDepartment(string departmentId)
         {
             //获取标题
             base.ViewData["Title"] = "编辑部门";
             //获取部门
-            Department department = RepositoryContainer.Get<Department>().Get(departmentNo);
+            Department department = RepositoryContainer.Get<Department>().Get(departmentId);
+            department.Parent = RepositoryContainer.Get<DepartmentInfo>().Get(department.ParentId) ?? new DepartmentInfo();
             //获取分部视图
             return base.PartialView("_EditDepartment", department);
         }
         /// <summary>
         /// 显示部门详情
         /// </summary>
-        /// <param name="departmentNo">部门编号</param>
+        /// <param name="departmentId">部门id</param>
         /// <returns>显示部门详情的分部视图</returns>
-        public PartialViewResult ShowDetailDepartment(string departmentNo)
+        public PartialViewResult ShowDetailDepartment(string departmentId)
         {
             //获取标题
             base.ViewData["Title"] = "部门详情";
             //获取部门
-            Department department = RepositoryContainer.Get<Department>().Get(departmentNo);
+            Department department = RepositoryContainer.Get<Department>().Get(departmentId);
+            department.Parent = RepositoryContainer.Get<DepartmentInfo>().Get(department.ParentId) ?? new DepartmentInfo();
             //获取分部视图
             return base.PartialView("_DetailDepartment", department);
         }

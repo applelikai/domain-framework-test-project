@@ -50,7 +50,8 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Controllers
         /// </summary>
         /// <returns>员工管理</returns>
         [ViewCheckLoginFilter()]
-        [Module("emp-management")]
+        [Module("basic-management")]
+        [ParentMenu("emp-management")]
         [Menu("edit-employees")]
         public ViewResult Index()
         {
@@ -65,15 +66,15 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Controllers
         /// <summary>
         /// 显示编辑员工
         /// </summary>
-        /// <param name="employeeNo">员工编号</param>
+        /// <param name="employeeId">员工id</param>
         /// <returns>显示编辑员工的分部视图</returns>
-        public PartialViewResult ShowEditEmployee(string employeeNo)
+        public PartialViewResult ShowEditEmployee(string employeeId)
         {
             //获取标题
             base.ViewData["Title"] = "编辑员工";
             //获取员工
-            Employee employee = RepositoryContainer.Get<Employee>().Get(employeeNo);
-            employee.Department = RepositoryContainer.Get<Department>().Get(employee.DepartmentNo) ?? new Department();
+            Employee employee = RepositoryContainer.Get<Employee>().Get(employeeId);
+            employee.Department = RepositoryContainer.Get<Department>().Get(employee.DepartmentId) ?? new Department();
             employee.Job = RepositoryContainer.Get<Job>().Get(employee.JobId) ?? new Job();
             //获取分部视图
             return base.PartialView("_EditEmployee", employee);
@@ -81,15 +82,15 @@ namespace AutoIHome.Platform.Web.Areas.EmpManagement.Controllers
         /// <summary>
         /// 显示员工详情
         /// </summary>
-        /// <param name="employeeNo">员工编号</param>
+        /// <param name="employeeId">员工id</param>
         /// <returns>显示员工详情的分部视图</returns>
-        public PartialViewResult ShowDetailEmployee(string employeeNo)
+        public PartialViewResult ShowDetailEmployee(string employeeId)
         {
             //获取标题
             base.ViewData["Title"] = "员工详情";
             //获取员工
-            Employee employee = RepositoryContainer.Get<Employee>().Get(employeeNo);
-            employee.Department = RepositoryContainer.Get<Department>().Get(employee.DepartmentNo) ?? new Department();
+            Employee employee = RepositoryContainer.Get<Employee>().Get(employeeId);
+            employee.Department = RepositoryContainer.Get<Department>().Get(employee.DepartmentId) ?? new Department();
             employee.Job = RepositoryContainer.Get<Job>().Get(employee.JobId) ?? new Job();
             //获取分部视图
             return base.PartialView("_DetailEmployee", employee);

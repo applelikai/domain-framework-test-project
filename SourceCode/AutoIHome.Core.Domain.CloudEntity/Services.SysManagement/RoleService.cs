@@ -46,9 +46,9 @@ namespace AutoIHome.Core.Domain.CloudEntity.Services.SysManagement
         /// 保存角色权限菜单列表
         /// </summary>
         /// <param name="roleId">角色id</param>
-        /// <param name="menuNames">菜单名称数组</param>
+        /// <param name="menus">菜单数组</param>
         /// <returns>结果及提示</returns>
-        public (bool, string) SaveRoleMenes(string roleId, string[] menuNames)
+        public (bool, string) SaveRoleMenes(string roleId, RoleMenu[] menus)
         {
             //开始事务处理
             using (IDbExecutor executor = base.Container.CreateExecutor())
@@ -56,13 +56,11 @@ namespace AutoIHome.Core.Domain.CloudEntity.Services.SysManagement
                 //删除之前授权的菜单列表
                 executor.Operator<RoleMenu>().RemoveAll(m => m.RoleId.Equals(roleId));
                 //添加新授权的菜单列表
-                foreach (string menuName in menuNames)
+                foreach (RoleMenu menu in menus)
                 {
-                    executor.Operator<RoleMenu>().Add(new RoleMenu(GuidHelper.NewOrdered().ToString())
-                    {
-                        MenuName = menuName,
-                        RoleId = roleId
-                    });
+                    menu.MenuId = GuidHelper.NewOrdered().ToString();
+                    menu.RoleId = roleId;
+                    executor.Operator<RoleMenu>().Add(menu);
                 }
                 //提交修改
                 executor.Commit();

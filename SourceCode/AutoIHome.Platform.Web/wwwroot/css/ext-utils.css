@@ -42,3 +42,17 @@ a {
 .copyright {
     font-size: 13px;
 }
+/*竖面板样式*/
+.div-panel-vertical {
+    background-color: white;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 10px;
+}
+/*横面板样式*/
+.div-panel-horizontal {
+    background-color: white;
+    width: 100%;
+    overflow-x: scroll;
+    padding: 10px;
+}

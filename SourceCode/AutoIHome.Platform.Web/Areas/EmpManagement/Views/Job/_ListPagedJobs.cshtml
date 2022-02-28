@@ -6,8 +6,8 @@
 <table class="table table-striped table-bordered table-hover">
     <thead>
         <tr>
+            <th>所属部门</th>
             <th>职位名称</th>
-            <th>备注</th>
             <th>录入时间</th>
             <th>操作</th>
         </tr>
@@ -16,10 +16,14 @@
         @foreach (var job in base.Model)
         {
             <tr>
+                <td>@job.Department.DepartmentName</td>
                 <td>@job.JobName</td>
-                <td>@job.Remark</td>
                 <td>@string.Format("{0:yyyy-MM-dd HH:mm:ss}", job.CreatedTime)</td>
                 <td>
+                    <primary-link click="show_job('@job.JobId');">
+                        <partial name="_LinkTextInfo" />
+                    </primary-link>
+                    &nbsp;
                     <primary-link click="show_edit_job('@job.JobId');">
                         <partial name="_LinkTextEdit" />
                     </primary-link>
